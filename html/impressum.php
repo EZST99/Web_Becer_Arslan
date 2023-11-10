@@ -29,6 +29,7 @@
             <div class="col-md-12"> <!-- Volle Breite, um Texte untereinander darzustellen -->
                 <div class="mb-4 ms-3"> <!-- Klasse für leichte Einrückung beibehalten -->
                     <h2>Hotel Helios GmbH</h2>
+                    <br>
                     <address>
                         Hotelstraße 31<br>
                         1020 Wien, Österreich
