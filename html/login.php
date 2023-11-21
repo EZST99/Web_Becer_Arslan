@@ -1,6 +1,4 @@
 <?php
-include 'nav.php';
-
 session_start();
 
 /*if (isset($_GET["logout"]) && $_GET["logout"] == "true") {
@@ -166,9 +164,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["username"] == "admin" && $_P
                             <a href="#">Passwort vergessen?</a>
                             <p>Noch gar keinen Account? <a href="registrierung.php">Registriere dich hier</a></p>
                         </form>
-                    <?php else : header("Location: index.php");?>
-                        
-                    <?php endif ?>
                 </div>
             </div>
         </div>
