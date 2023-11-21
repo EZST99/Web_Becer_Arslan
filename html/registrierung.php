@@ -150,13 +150,13 @@
                 <div class="col-lg-7 px-5 pt-5">
                     <h1 class="font-weight-bold py-3">Hotel Helios</h1>
                     <h4>Registrieren</h4>
-                    <p><span class="error">* Pflichtfeld</span></p>
+                    <p><span class="error"></span></p>
                     <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-row">
                                     <input name="anrede" type="text" class="form-control my-3 p-4" placeholder="Anrede">
-                                    <span class="error">*
+                                    <span class="error">
                                         <?php echo $anredeErr; ?>
                                     </span>
                                 </div>
@@ -165,7 +165,7 @@
                                 <div class="form-row">
                                     <input name="vorname" type="text" class="form-control my-3 p-4"
                                         placeholder="Vorname">
-                                    <span class="error">*
+                                    <span class="error">
                                         <?php echo $vornameErr; ?>
                                     </span>
                                 </div>
@@ -176,7 +176,7 @@
                                 <div class="form-row">
                                     <input name="nachname" type="text" class="form-control my-3 p-4"
                                         placeholder="Nachname">
-                                    <span class="error">*
+                                    <span class="error">
                                         <?php echo $nachnameErr; ?>
                                     </span>
                                 </div>
@@ -184,7 +184,7 @@
                             <div class="col-md-6">
                                 <div class="form-row">
                                     <input name="email" type="email" class="form-control my-3 p-4" placeholder="E-Mail">
-                                    <span class="error">*
+                                    <span class="error">
                                         <?php echo $emailErr; ?>
                                     </span>
                                 </div>
@@ -194,7 +194,7 @@
                             <div class="col-md-6">
                                 <div class="form-row">
                                     <input name="geburtsdatum" type="date" class="form-control my-3 p-4">
-                                    <span class="error">*
+                                    <span class="error">
                                         <?php echo $geburtsdatumErr; ?>
                                     </span>
                                 </div>
@@ -203,7 +203,7 @@
                                 <div class="form-row">
                                     <input name="username" type="text" class="form-control my-3 p-4"
                                         placeholder="Username">
-                                    <span class="error">*
+                                    <span class="error">
                                         <?php echo $usernameErr; ?>
                                     </span>
                                 </div>
@@ -214,7 +214,7 @@
                                 <div class="form-row">
                                     <input name="password" type="password" class="form-control my-3 p-4"
                                         placeholder="Passwort">
-                                    <span class="error">*
+                                    <span class="error">
                                         <?php echo $passwordErr; ?>
                                     </span>
                                 </div>
@@ -223,7 +223,7 @@
                                 <div class="form-row">
                                     <input name="repassword" type="password" class="form-control my-3 p-4"
                                         placeholder="Passwort wiederholen">
-                                    <span class="error">*
+                                    <span class="error">
                                         <?php echo $repasswordErr; ?>
                                     </span>
                                 </div>
