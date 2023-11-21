@@ -1,3 +1,28 @@
+<?php
+include 'nav.php';
+
+session_start();
+
+/*if (isset($_GET["logout"]) && $_GET["logout"] == "true") {
+
+    unset($_SESSION["newsession"]);
+
+    header("Location: ../html/");
+
+
+    session_destroy();
+    die("You signed out...");
+}*/
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["username"] == "admin" && $_POST["password"] == "admin") {
+
+    $_SESSION["user"] = $_POST["username"];
+    setcookie("loginCookie", $_POST["username"], time() + 3600);
+    header("Location: index.php");
+}
+?>
+
+
 <!DOCTYPE html>
 <html>
 
@@ -141,10 +166,12 @@
                             <a href="#">Passwort vergessen?</a>
                             <p>Noch gar keinen Account? <a href="registrierung.php">Registriere dich hier</a></p>
                         </form>
-                    </div>
+                    <?php else : header("Location: index.php");?>
+                        
+                    <?php endif ?>
                 </div>
-        
             </div>
+        </div>
     </section>
 
     <?php
@@ -163,4 +190,3 @@
     ?>
 
 </html>
-
