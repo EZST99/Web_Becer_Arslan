@@ -11,7 +11,7 @@
 <body>
 
     <div class="container mt-5">
-        <h1 class="text-center mb-4">Aktuelle Nachrichten</h1>
+        <h1 class="text-center mb-4">News Posten</h1>
 
         <?php
         // Überprüfe, ob das Formular abgeschickt wurde
@@ -21,11 +21,13 @@
                 // Wenn wirklich ein Bild noch geladen wurde...
                 // Dateipfad des Zieles dynamisch zusammensetzen <WorkingFolder>\news\<EindeutigeID>_<UrsprünglicherDateiname>
                 $uploadDirectory = "news/";
-                $destination = $uploadDirectory . uniqid() . "_" . $_FILES["newsFile"]["name"];
+                $imageDestination = $uploadDirectory . uniqid() . "_" . $_FILES["newsFile"]["name"];
 
                 // Hochgeladen Datei vom Zwischenspeicher zum vorher zusammengesetzten Dateipfad verschieben
-                if (move_uploaded_file($_FILES["newsFile"]["tmp_name"], $destination)) {
-                    echo "Die Datei " . htmlspecialchars(basename($_FILES["newsFile"]["name"])) . " wurde erfolgreich hochgeladen.";
+                if (move_uploaded_file($_FILES["newsFile"]["tmp_name"], $imageDestination)) {
+                    // Hier können Sie den Text verarbeiten
+                    $text = isset($_POST["newsText"]) ? $_POST["newsText"] : "";
+                    echo "Die Datei " . htmlspecialchars(basename($_FILES["newsFile"]["name"])) . " und der Text '$text' wurden erfolgreich hochgeladen.";
                 } else {
                     echo "Es gab einen Fehler beim Hochladen der Datei.";
                 }
@@ -35,43 +37,6 @@
                 echo "Der Dateityp wird nicht unterstützt.";
             }
         }
-
-        // Zeige die Nachrichten nur an, wenn das Formular ausgefüllt wurde
-        echo '
-        <div class="row">
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="https://via.placeholder.com/300" class="card-img-top" alt="News Image">
-                    <div class="card-body">
-                        <h5 class="card-title">Schlagzeile 1</h5>
-                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in felis eget arcu hendrerit.</p>
-                        <a href="#" class="btn btn-primary">Weiterlesen</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="https://via.placeholder.com/300" class="card-img-top" alt="News Image">
-                    <div class="card-body">
-                        <h5 class="card-title">Schlagzeile 2</h5>
-                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in felis eget arcu hendrerit.</p>
-                        <a href="#" class="btn btn-primary">Weiterlesen</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="https://via.placeholder.com/300" class="card-img-top" alt="News Image">
-                    <div class="card-body">
-                        <h5 class="card-title">Schlagzeile 3</h5>
-                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in felis eget arcu hendrerit.</p>
-                        <a href="#" class="btn btn-primary">Weiterlesen</a>
-                    </div>
-                </div>
-            </div>
-        </div>';
         ?>
 
         <!-- Zeige das Formular, wenn es noch nicht abgeschickt wurde -->
@@ -79,6 +44,10 @@
             <div class="mb-3">
                 <label for="newsFile" class="form-label">Nachrichten-Datei auswählen</label>
                 <input type="file" class="form-control" id="newsFile" name="newsFile" accept=".jpg, .jpeg">
+            </div>
+            <div class="mb-3">
+                <label for="newsText" class="form-label">Text eingeben</label>
+                <textarea class="form-control" id="newsText" name="newsText"></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Hochladen</button>
         </form>
