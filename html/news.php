@@ -1,39 +1,54 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>News Page</title>
+    <title>Create News</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
 </head>
 
 <body>
+    <?php
+    include 'nav.php';
+    ?>
 
     <div class="container mt-5">
         <h1 class="text-center mb-4">News Posten</h1>
 
         <?php
-        // Überprüfe, ob das Formular abgeschickt wurde
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["newsFile"])) {
             // Den Typ des Bildes auf image/jpeg überprüfen
             if ($_FILES["newsFile"]["type"] == "image/jpeg") {
-                // Wenn wirklich ein Bild noch geladen wurde...
-                // Dateipfad des Zieles dynamisch zusammensetzen <WorkingFolder>\news\<EindeutigeID>_<UrsprünglicherDateiname>
                 $uploadDirectory = "news/";
-                $imageDestination = $uploadDirectory . uniqid() . "_" . $_FILES["newsFile"]["name"];
+                $imageFileName = uniqid() . "_" . $_FILES["newsFile"]["name"];
+                $imageDestination = $uploadDirectory . $imageFileName;
+                $newPicture = $imageDestination; // Store the link here
+
+                if (!isset($_SESSION["newsPic"]) || !is_array($_SESSION["newsPic"])) {
+                    $_SESSION["newsPic"] = [];
+                }
+                $_SESSION["newsPic"][] = $newPicture;
 
                 // Hochgeladen Datei vom Zwischenspeicher zum vorher zusammengesetzten Dateipfad verschieben
                 if (move_uploaded_file($_FILES["newsFile"]["tmp_name"], $imageDestination)) {
-                    // Hier können Sie den Text verarbeiten
-                    $text = isset($_POST["newsText"]) ? $_POST["newsText"] : "";
-                    echo "Die Datei " . htmlspecialchars(basename($_FILES["newsFile"]["name"])) . " und der Text '$text' wurden erfolgreich hochgeladen.";
+                    if (isset($_POST["newsText"])) {
+                        $newText = $_POST["newsText"];
+                        if (!isset($_SESSION["news"]) || !is_array($_SESSION["news"])) {
+                            $_SESSION["news"] = [];
+                        }
+                        $_SESSION["news"][] = $newText;
+                        echo "Upload war erfolgreich.";
+                    }
                 } else {
                     echo "Es gab einen Fehler beim Hochladen der Datei.";
                 }
             } else {
                 // Es wurde keine JPEG-Bild hochgeladen
-                // Nur eine Fehlermeldung ausgeben
                 echo "Der Dateityp wird nicht unterstützt.";
             }
         }
