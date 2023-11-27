@@ -11,6 +11,11 @@ session_start();
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
 
     <style>
+        .news-image {
+            max-width: 100%;
+            height: auto;
+        }
+
         .card {
             /* Add shadows to create the "card" effect */
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
@@ -45,7 +50,7 @@ session_start();
                     <div class="card mb-4">
                         <div class="row g-0">
                             <div class="col-md-4">
-                                <img src="' . $newsPic . '" class="img-fluid" alt="News Image">
+                                <img src="' . $newsPic . '" class="img-fluid news-image" alt="News Image">
                             </div>
                             <div class="col-md-8">
                                 <div class="card-body">
