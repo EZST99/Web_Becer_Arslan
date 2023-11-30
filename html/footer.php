@@ -1,11 +1,3 @@
-<?php
-  include 'footer.php';
-  ?>
-</body>
-
-</html>
-
-und das folgende ist der footer:
 <!DOCTYPE html>
 <html lang="en">
 

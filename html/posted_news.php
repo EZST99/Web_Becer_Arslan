@@ -15,7 +15,6 @@ session_start();
             max-width: 100%;
             height: auto;
         }
-
         .card {
             /* Add shadows to create the "card" effect */
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
