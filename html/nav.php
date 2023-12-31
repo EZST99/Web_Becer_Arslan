@@ -32,13 +32,20 @@
                 <div class="collapse navbar-collapse" id="navmenu">
                     <ul class="navbar-nav ms-auto">
                         <?php
+                        echo '<li class="nav-item">
+                        <a href="index.php" class="nav-link">Home</a>
+                    </li>';
                         if (isset($_SESSION["user"])) {
                             echo '<li class="nav-item">
                             <a href="logout.php" class="nav-link">Logout</a>
                         </li>';
+                        echo ' <li class="nav-item">
+                            <a href="profil.php" class="nav-link">Profil</a>
+                        </li>';
                             echo ' <li class="nav-item">
                             <a href="news.php" class="nav-link">Poste neue News</a>
                         </li>';
+                        
                         } else {
                             echo '<li class="nav-item">
                             <a href="login.php" class="nav-link">Login</a>
