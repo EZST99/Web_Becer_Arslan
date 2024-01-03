@@ -1,6 +1,8 @@
 <?php
 session_start();
+include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -43,18 +45,24 @@ session_start();
         <h1 class="text-center mb-4">News</h1>
 
         <?php
-        if (isset($_SESSION["news"]) && is_array($_SESSION["news"]) && isset($_SESSION["newsPic"])) {
-            // Iterate through each news item and corresponding picture
-            foreach (array_map(null, $_SESSION["news"], $_SESSION["newsPic"]) as list($newsText, $newsPic)) {
+        $news_query = $conn->query("SELECT bild_pfad, text, DATE_FORMAT(datum, '%d.%m.%Y') AS formatted_date FROM news ORDER BY datum DESC, news_id DESC");
+
+        if ($news_query->num_rows > 0) {
+            // Iterate through each news item and display them
+            while ($row = $news_query->fetch_assoc()) {
+                $bild_pfad = $row["bild_pfad"];
+                $text = $row["text"];
+                $formatted_date = $row["formatted_date"];
+
                 echo '<!-- News Article Card -->
                     <div class="card mb-4">
                         <div class="row g-0">
                             <div class="col-md-4">
-                                <img src="' . $newsPic . '" class="img-fluid news-image" alt="News Image">
+                                <img src="' . $bild_pfad . '" class="img-fluid news-image" alt="News Image">
                             </div>
                             <div class="col-md-8">
                                 <div class="card-body">
-                                    <p class="card-text" style="font-weight: lighter; margin-left: 20px">' . $newsText . '</p>
+                                    <p class="card-text" style="font-weight: lighter; margin-left: 20px"><strong>' . $formatted_date . '</strong><br>' . $text . '</p>
                                 </div>
                             </div>
                         </div>

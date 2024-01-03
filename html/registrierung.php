@@ -55,6 +55,10 @@
         .error-message {
             color: red;
         }
+
+        .success {
+            color: green;
+        }
     </style>
 
 </head>
@@ -62,82 +66,116 @@
 <body>
     <?php
     include 'nav.php';
-    ?>
-    <?php
-    $nachnameErr = $emailErr = $usernameErr = $anredeErr = $vornameErr = $passwordErr = $repasswordErr = $nachnameErr = $geburtsdatumErr = "";
+    include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
+    
+
+    $nachnameErr = $emailErr = $usernameErr = $anredeErr = $vornameErr = $passwordErr = $repasswordErr = $geburtsdatumErr = $regErfolg = "";
     $username = $email = $geburtsdatum = $anrede = $nachname = $vorname = $password = $repassword = "";
 
-    //Input fields validation  
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        //String Validation  
-        if (empty($_POST["vorname"])) {
+    require("dbaccess.php");
+
+    if($_SERVER["REQUEST_METHOD"] == "POST") {
+        // Validierung für Vorname
+        if(empty($_POST["vorname"])) {
             $vornameErr = "Bitte ausfüllen!";
         } else {
             $vorname = test_input($_POST["vorname"]);
-            // check if name only contains letters and whitespace  
-            if (!preg_match("/^[a-zA-Z ]*$/", $vorname)) {
+            if(!preg_match("/^[a-zA-Z ]*$/", $vorname)) {
                 $vornameErr = "Nur Buchstaben und Leerzeichen erlaubt!";
             }
         }
 
-        if (empty($_POST["nachname"])) {
+        // Validierung für Nachname
+        if(empty($_POST["nachname"])) {
             $nachnameErr = "Bitte ausfüllen!";
         } else {
             $nachname = test_input($_POST["nachname"]);
-            // check if name only contains letters and whitespace  
-            if (!preg_match("/^[a-zA-Z ]*$/", $nachname)) {
+            if(!preg_match("/^[a-zA-Z ]*$/", $nachname)) {
                 $nachnameErr = "Nur Buchstaben und Leerzeichen erlaubt!";
             }
         }
 
-        if (empty($_POST["username"])) {
+        // Validierung für Benutzername
+        if(empty($_POST["username"])) {
             $usernameErr = "Bitte ausfüllen!";
         } else {
             $username = test_input($_POST["username"]);
         }
 
-        if (empty($_POST["anrede"])) {
+        // Validierung für Anrede
+        if(empty($_POST["anrede"])) {
             $anredeErr = "Bitte ausfüllen!";
         } else {
             $anrede = test_input($_POST["anrede"]);
-            // check if name only contains letters and whitespace  
-            if (!preg_match("/^[a-zA-Z ]*$/", $anrede)) {
+            if(!preg_match("/^[a-zA-Z ]*$/", $anrede)) {
                 $anredeErr = "Nur Buchstaben erlaubt!";
             }
         }
 
-        //Email Validation   
-        if (empty($_POST["email"])) {
+        // Email-Validierung
+        if(empty($_POST["email"])) {
             $emailErr = "Bitte ausfüllen!";
         } else {
             $email = test_input($_POST["email"]);
-            // check that the e-mail address is well-formed  
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $emailErr = "Ungültiges Format!";
+            } else {
+                // Überprüfen, ob die E-Mail-Adresse bereits in der Datenbank vorhanden ist
+                $check_email_query = $conn->prepare("SELECT * FROM users WHERE email = ?");
+                $check_email_query->bind_param("s", $email);
+                $check_email_query->execute();
+                $result = $check_email_query->get_result();
+
+                if($result->num_rows > 0) {
+                    $emailErr = "Diese E-Mail-Adresse ist bereits registriert!";
+                }
+
+                $check_email_query->close();
             }
         }
-  
-        if (empty($_POST["password"])) {
+
+        // Validierung für Passwort
+        if(empty($_POST["password"])) {
             $passwordErr = "Bitte ausfüllen!";
         } else {
             $password = test_input($_POST["password"]);
         }
 
-        if (empty($_POST["rwpassword"])) {
+        // Validierung für Passwort wiederholen
+        if(empty($_POST["repassword"])) {
             $repasswordErr = "Bitte ausfüllen!";
         } else {
             $repassword = test_input($_POST["repassword"]);
+            if($repassword !== $password) {
+                $repasswordErr = "Die Passwörter stimmen nicht überein!";
+            }
         }
 
-        if (empty($_POST["geburtsdatum"])) {
+        // Validierung für Geburtsdatum
+        if(empty($_POST["geburtsdatum"])) {
             $geburtsdatumErr = "Bitte ausfüllen!";
         } else {
             $geburtsdatum = test_input($_POST["geburtsdatum"]);
         }
 
+        // Überprüfen, ob keine Fehler aufgetreten sind
+        if($vornameErr == "" && $nachnameErr == "" && $emailErr == "" && $usernameErr == "" && $geburtsdatumErr == "" && $anredeErr == "" && $passwordErr == "" && $repasswordErr == "") {
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            $stmt = $conn->prepare("INSERT INTO users (anrede, vorname, nachname, email, geburtsdatum, username, passwort) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("sssssss", $anrede, $vorname, $nachname, $email, $geburtsdatum, $username, $hashedPassword);
+
+            if($stmt->execute()) {
+                $regErfolg = "Sie haben sich erfolgreich registriert!";
+                // Weitere erfolgreiche Registrierungsausgaben...
+            } else {
+                echo "Fehler beim Speichern der Daten in die Datenbank: ".$stmt->error;
+            }
+            $stmt->close();
+            $conn->close();
+        }
     }
-    function test_input($data)
-    {
+
+    function test_input($data) {
         $data = trim($data);
         $data = stripslashes($data);
         $data = htmlspecialchars($data);
@@ -231,6 +269,10 @@
                         </div>
                         <div class="form-row">
                             <button type="submit" class="btn1 mt-3 mb-5">Registrieren</button>
+                            <span class="success">
+                                <?php echo $regErfolg; ?>
+                                <br>
+                            </span>
                         </div>
                     </form>
                     <p>Bereits ein Account? <a href="login.php">Melde dich an</a></p>
@@ -241,32 +283,6 @@
             </div>
         </div>
     </section>
-
-    <?php
-    if (isset($_POST['submit'])) {
-        if ($vornameErr == "" && $emailErr == "" && $usernameErr == "" && $nachnameErr == "" && $geburtsdatumErr == "" && $anredeErr == "" && $passwordErr == "" && $repasswordErr == "") {
-            echo "<h3 color = #FF0001> <b>Sie haben sich erfolgreich registriert!</b> </h3>";
-            echo "<h2>Your Input:</h2>";
-            echo "Username: " . $username;
-            echo "<br>";
-            echo "Vorname: " . $vorname;
-            echo "<br>";
-            echo "Nachname: " . $nachname;
-            echo "<br>";
-            echo "Email: " . $email;
-            echo "<br>";
-            echo "Geburtsdatum: " . $geburtsdatum;
-            echo "<br>";
-            echo "Anrede: " . $anrede;
-            echo "Password: " . $password;
-            echo "<br>";
-            echo "Repassword: " . $repassword;
-            echo "<br>";
-        } else {
-            echo "<h3> <b>Sie haben nicht alle Felder korrekt ausgefüllt!</b> </h3>";
-        }
-    }
-    ?>
 </body>
 
 </html>

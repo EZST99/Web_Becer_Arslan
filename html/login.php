@@ -1,25 +1,61 @@
 <?php
 session_start();
 
-/*if (isset($_GET["logout"]) && $_GET["logout"] == "true") {
+include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
 
-    unset($_SESSION["newsession"]);
+$usernameErr = $passwordErr = "";
+$username = $password = "";
 
-    header("Location: ../html/");
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (empty($_POST["username"])) {
+        $usernameErr = "Bitte ausfüllen!";
+    } else {
+        $username = test_input($_POST["username"]);
+    }
 
+    if (empty($_POST["password"])) {
+        $passwordErr = "Bitte ausfüllen!";
+    } else {
+        $password = test_input($_POST["password"]);
+    }
 
-    session_destroy();
-    die("You signed out...");
-}*/
+    if (empty($usernameErr) && empty($passwordErr)) {
+        // Überprüfen, ob die Kombination aus Benutzername und Passwort in der Datenbank vorhanden ist
+        $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["username"] == "admin" && $_POST["password"] == "admin") {
+        if ($result->num_rows === 1) {
+            $row = $result->fetch_assoc();
 
-    $_SESSION["user"] = $_POST["username"];
-    setcookie("loginCookie", $_POST["username"], time() + 3600);
-    header("Location: index.php");
+            // Überprüfen, ob das eingegebene Passwort mit dem gehashten Passwort in der Datenbank übereinstimmt
+            if (password_verify($password, $row["passwort"])) {
+                $_SESSION["user"] = $username;
+                setcookie("loginCookie", $username, time() + 3600);
+                header("Location: index.php");
+                exit;
+            } else {
+                // Passwort ist falsch
+                $passwordErr = "Falsches Passwort!";
+            }
+        } else {
+            // Benutzername nicht gefunden
+            $usernameErr = "Benutzername nicht gefunden!";
+        }
+
+        $stmt->close();
+    }
+}
+
+function test_input($data)
+{
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
 }
 ?>
-
 
 <!DOCTYPE html>
 <html>
@@ -76,112 +112,52 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["username"] == "admin" && $_P
             color: rgba(108, 73, 9, 0.671);
         }
     </style>
-
 </head>
 
 <body>
     <?php
     include 'nav.php';
-
-    if (($_SERVER["REQUEST_METHOD"] == "POST") && isset($_POST["username"]) && isset($_POST["password"])) {
-        if ($_POST["username"] == "user" && $_POST["password"] == "123") {
-            setcookie("loginCookie", $_POST["username"], time()+3600);
-            header("Location: index.php");
-            exit;
-        }
-    }
-
-    $usernameErr = $passwordErr = "";
-    $username = $password = "";
-
-    //Input fields validation  
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        
-        if (empty($_POST["username"])) {
-            $usernameErr = "Bitte ausfüllen!";
-        } else {
-            $username = test_input($_POST["username"]);
-        }
-
-        if (empty($_POST["password"])) {
-            $passwordErr = "Bitte ausfüllen!";
-        } else {
-            $password = test_input($_POST["password"]);
-        }
-    }
-    function test_input($data)
-    {
-        $data = trim($data);
-        $data = stripslashes($data);
-        $data = htmlspecialchars($data);
-        return $data;
-    }
-
-   /* session_start();
-        if (isset($_POST["username"]) && isset($_POST["password"])) {
-            if ($_POST["username"] == $_POST["password"]) {
-                // Login erfolgreich
-                $_SESSION["usernameSession"] = $_POST["username"];
-            } else {
-                // Login nicht erfolgreich
-                echo "Schleich dich!";
-            }
-        }*/
     ?>
     
     <section class="Form my-4 mx-5">
-            <div class="container">
-                <div class="row no-gutters">
-                    <div class="col-lg-5 p-0">
-                        <img src="../images/Hotel_Login.png" class="img-fluid p-0 m-0" alt="Gäste Bild">
-                    </div>
-                    <div class="col-lg-7 px-5 pt-5">
-                        <h1 class="font-weight-bold py-3">Hotel Helios</h1>
-                        <h4>Account anmelden</h4>
-                        <p><span class="error"></span></p>
-                        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-                            <div class="form-row">
-                                <div class="col-lg-7">
-                                    <input name ="username" type="text" placeholder="Username" class="form-control my-3 p-4">
-                                    <span class="error">
-                                        <?php echo $usernameErr; ?>
-                                    </span>
-                                </div>
+        <div class="container">
+            <div class="row no-gutters">
+                <div class="col-lg-5 p-0">
+                    <img src="../images/Hotel_Login.png" class="img-fluid p-0 m-0" alt="Gäste Bild">
+                </div>
+                <div class="col-lg-7 px-5 pt-5">
+                    <h1 class="font-weight-bold py-3">Hotel Helios</h1>
+                    <h4>Account anmelden</h4>
+                    <p><span class="error"></span></p>
+                    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+                        <div class="form-row">
+                            <div class="col-lg-7">
+                                <input name="username" type="text" placeholder="Username" class="form-control my-3 p-4">
+                                <span class="error">
+                                    <?php echo $usernameErr; ?>
+                                </span>
                             </div>
-                            <div class="form-row">
-                                <div class="col-lg-7">
-                                    <input name ="password" type="password" placeholder="******" class="form-control my-3 p-4">
-                                    <span class="error">
-                                        <?php echo $passwordErr; ?>
-                                    </span>
-                                </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-lg-7">
+                                <input name="password" type="password" placeholder="******" class="form-control my-3 p-4">
+                                <span class="error">
+                                    <?php echo $passwordErr; ?>
+                                </span>
                             </div>
-                            <div class="form-row">
-                                <div class="col-lg-7">
-                                    <button type="submit" class="btn1 mt-3 mb-5">Login</button>
-                                </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-lg-7">
+                                <button type="submit" class="btn1 mt-3 mb-5">Login</button>
                             </div>
-                            <a href="#">Passwort vergessen?</a>
-                            <p>Noch gar keinen Account? <a href="registrierung.php">Registriere dich hier</a></p>
-                        </form>
+                        </div>
+                        <a href="#">Passwort vergessen?</a>
+                        <p>Noch gar keinen Account? <a href="registrierung.php">Registriere dich hier</a></p>
+                    </form>
                 </div>
             </div>
         </div>
     </section>
-
-    <?php
-    if (isset($_POST['submit'])) {
-        if ($usernameErr == "" && $passwordErr == "") {
-            echo "<h3 color = #FF0001> <b>Sie haben sich erfolgreich eingeloggt!</b> </h3>";
-            echo "<h2>Your Input:</h2>";
-            echo "Username: " . $username;
-            echo "<br>";
-            echo "Password: " . $password;
-            echo "<br>";
-        } else {
-            echo "<h3> <b>Sie haben nicht alle Felder korrekt ausgefüllt!</b> </h3>";
-        }
-    }
-    ?>
+</body>
 
 </html>

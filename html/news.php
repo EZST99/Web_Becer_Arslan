@@ -1,5 +1,7 @@
 <?php
 session_start();
+include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
+
 ?>
 
 <!DOCTYPE html>
@@ -21,28 +23,35 @@ session_start();
         <h1 class="text-center mb-4">News Posten</h1>
 
         <?php
-        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["newsFile"])) {
+        if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["newsFile"])) {
             // Den Typ des Bildes auf image/jpeg überprüfen
-            if ($_FILES["newsFile"]["type"] == "image/jpeg") {
+            if($_FILES["newsFile"]["type"] == "image/jpeg") {
                 $uploadDirectory = "news/";
-                $imageFileName = uniqid() . "_" . $_FILES["newsFile"]["name"];
-                $imageDestination = $uploadDirectory . $imageFileName;
+                $imageFileName = uniqid()."_".$_FILES["newsFile"]["name"];
+                $imageDestination = $uploadDirectory.$imageFileName;
                 $newPicture = $imageDestination; // Store the link here
-
-                if (!isset($_SESSION["newsPic"]) || !is_array($_SESSION["newsPic"])) {
+        
+                if(!isset($_SESSION["newsPic"]) || !is_array($_SESSION["newsPic"])) {
                     $_SESSION["newsPic"] = [];
                 }
                 $_SESSION["newsPic"][] = $newPicture;
 
                 // Hochgeladen Datei vom Zwischenspeicher zum vorher zusammengesetzten Dateipfad verschieben
-                if (move_uploaded_file($_FILES["newsFile"]["tmp_name"], $imageDestination)) {
-                    if (isset($_POST["newsText"])) {
+                if(move_uploaded_file($_FILES["newsFile"]["tmp_name"], $imageDestination)) {
+                    if(isset($_POST["newsText"])) {
                         $newText = $_POST["newsText"];
-                        if (!isset($_SESSION["news"]) || !is_array($_SESSION["news"])) {
-                            $_SESSION["news"] = [];
+                        /* if (!isset($_SESSION["news"]) || !is_array($_SESSION["news"])) {
+                             $_SESSION["news"] = [];
+                         }
+                            $_SESSION["news"][] = $newText; */
+                        // Datenbankzugriff
+                        $uploadDatum = date('Y-m-d H:i:s');
+                        $stmt = $conn->prepare("INSERT INTO news (bild_pfad, text, datum) VALUES (?, ?, ?)");
+                        $stmt->bind_param("sss", $newPicture, $newText, $uploadDatum);
+                        if($stmt->execute()) {
+                            echo "Upload war erfolgreich.";
+                            
                         }
-                        $_SESSION["news"][] = $newText;
-                        echo "Upload war erfolgreich.";
                     }
                 } else {
                     echo "Es gab einen Fehler beim Hochladen der Datei.";
