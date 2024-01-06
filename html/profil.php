@@ -1,3 +1,8 @@
+<?php
+session_start();
+include 'nav.php';
+include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,184 +13,155 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
     <title>Profilverwaltung</title>
+    <style>
+    /* Fügen Sie diesem CSS-Stil die Klasse .footer-container hinzu */
+    .footer-container {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
 
+    /* Fügen Sie diesem CSS-Stil die Klasse .footer hinzu */
+    .footer {
+        margin-top: auto;
+    }
+    .success-message {
+        color: green;
+    }
+
+    /* Stil für Fehlermeldung */
+    .error-message {
+        color: red;
+    }
+</style>
 </head>
 
 <body>
     <?php
-    session_start();
-    include 'nav.php';
-    // Statische Daten für das Beispiel
-    $_SESSION["updateVorname"] = "Max";
-    $_SESSION["updateNachname"] = "Mustermann";
-    $_SESSION["updateAnrede"] = "Herr";
-    $_SESSION["updateEmail"] = "max.mustermann@mail.com";
-    $_SESSION["updateUsername"] = "admin";
-    $_SESSION["updatePassword_1"] = "admin";
 
-    $msg = $msg_passwort = '';
+    // Überprüfen, ob ein Benutzer eingeloggt ist
+    if (isset($_SESSION['user'])) {
+        $username = $_SESSION['user'];
 
-    if($_SERVER["REQUEST_METHOD"] == "POST") {
+        // SQL-Abfrage, um Benutzerdaten anhand der E-Mail-Adresse abzurufen
+        $query = "SELECT * FROM users WHERE username = '{$_SESSION['user']}'";
+        $result = $conn->query($query);
 
-        if(isset($_POST["anrede"])) {
-            if($_SESSION["updateAnrede"] != $_POST["anrede"]) {
-            }
-            $_SESSION["updateAnrede"] = $_POST["anrede"];
-            $msg = "<span class='text-success'> Das Profil wurde aktualisiert! </span>";
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $vorname = $row["vorname"];
+            $nachname = $row["nachname"];
+            $status = $row["user_status"];
+            $geburtsdatum = $row["geburtsdatum"];
+            $email = $row["email"];
+            $passwort = $row["passwort"];
+            $anrede = $row["anrede"];
 
-        }
-
-        if(isset($_POST["vorname"])) {
-            if($_SESSION["updateVorname"] != $_POST["vorname"]) {
-            }
-            $_SESSION["updateVorname"] = $_POST["vorname"];
-            $msg = "<span class='text-success'> Das Profil wurde aktualisiert! </span>";
-
-        }
-        if(isset($_POST["lastname"])) {
-            if($_SESSION["updateNachname"] != $_POST["lastname"]) {
-            }
-            $_SESSION["updateNachname"] = $_POST["lastname"];
-            $msg = "<span class='text-success'> Das Profil wurde aktualisiert! </span>";
-
-        }
-        if(isset($_POST["username"])) {
-            if($_SESSION["updateUsername"] != $_POST["username"]) {
-            }
-            $_SESSION["updateUsername"] = $_POST["username"];
-            $msg = "<span class='text-success'> Das Profil wurde aktualisiert! </span>";
-
-        }
-
-        if(isset($_POST["email"])) {
-            if(!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
-                $msg_email = "Ungültige E-Mail-Adresse!";
-            } else {
-                if($_SESSION["updateEmail"] != $_POST["email"]) {
-                }
-                $_SESSION["updateEmail"] = $_POST["email"];
-                $msg = "<span class='text-success'> Das Profil wurde aktualisiert! </span>";
-
-            }
-        }
-
-        if(!empty($_POST["password"]) && !empty($_POST["password_2"])) {
-            if($_POST["password"] == $_SESSION["updatePassword_1"]) {
-                $_SESSION["updatePassword_1"] = $_POST["password_2"];
-                $msg_passwort = "<span class='text-success'> Das Passwort wurde aktualisiert! </span>";
-            } else {
-                $msg_passwort = "<span class='text-danger'> Altes Passwort stimmt nicht überein! </span>";
-            }
-        } else if(!empty($_POST["password"]) xor !empty($_POST["password_2"])) {
-            $msg_passwort = "<span class='text-danger'> Bitte altes und neues Passwort angeben! </span>";
-        }
-    }
-    ?>
-
-    <div class="bg-image">
-        <div class="container rounded bg-white mt-5 mb-5">
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img
+            // Hier können Sie ein Formular anzeigen, um die Daten zu bearbeiten
+            echo '<div class="footer-container">
+            <div class="bg-image">
+            <div class="container rounded bg-white mt-5 mb-5">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img
                             class="rounded-circle mt-5" width="150px"
                             src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"><span
                             class="font-weight-bold">
-                            <?php echo $_SESSION["updateVorname"]." ".$_SESSION["updateNachname"] ?>
-                        </span><span class="text-black-50">
-                            <?php echo $_SESSION["updateEmail"] ?>
-                        </span><span> </span></div>
-                </div>
-                <div class="col-md-5 offset-md-1">
-                    <div class="p-3 py-5">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h4 class="text-right">Profileinstellungen</h4>
+                            ' . $vorname . ' '. $nachname . '
+                            </span><span class="text-black-50">
+                                ' . $email . '
+                            </span><span> </span></div>
                         </div>
-                        <div class="row mt-3">
-                            <form action="" method="post">
-                                <select class="form-select" aria-label="anrede" name="anrede">
-                                    <option disabled value="">Bitte wählen Sie den Anrede</option>
+                        <div class="col-md-5 offset-md-1">
+                            <div class="p-3 py-5">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                     <h4 class="text-right">Profileinstellungen</h4>
+                                        </div>
+                                            <div class="row mt-3">
+                                                <form action="speichernProfil.php" method="post">
+                                                    <div class="form-group">
+                                                        <label for="anrede" class="form-label">Anrede:</label>
+                                                        <input type="text" class="form-control" id="anrede" name="anrede" value="'.$anrede.'">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="vorname" class="form-label">Vorname:</label>
+                                                        <input type="text" class="form-control" id="vorname" name="vorname" value="'.$vorname.'">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="nachname" class="form-label">Nachname:</label>
+                                                        <input type="text" class="form-control" id="nachname" name="nachname" value="'.$nachname.'">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="username" class="form-label">Username:</label>
+                                                        <input type="text" class="form-control" id="username" name="username" value="'.$username.'">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="email" class="form-label">E-Mail-Adresse:</label>
+                                                        <input type="email" class="form-control" id="email" name="email" value="'.$email.'">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="geburtstag" class="form-label">Geburtstag:</label>
+                                                        <input type="date" class="form-control" id="geburtstag" name="geburtstag" value="'.$geburtsdatum.'">
+                                                    </div>
+                                                    <br>
+                                                    <div class="col-12">
+                                                        <button class="btn btn-dark" type="submit" name="register">Änderungen
+                                                            speichern</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                    <div class="p-3 py-5">
+                                        <h4 class="text-right">Passwort ändern</h4>
+                                        <br>
+                                        <form action="change_password.php" method="post">
+                                            <div class="form-group">
+                                                <label for="altesPasswort" class="form-label">Altes Passwort:</label>
+                                                <input type="password" class="form-control" id="altesPasswort" name="altesPasswort">
+                                            </div>
+                                            <br>
+                                            <div class="form-group">
+                                                <label for="neuesPasswort">Neues Passwort</label>
+                                                <input type="password" class="form-control" name="neuesPasswort" id="neuesPasswort">
+                                            </div>
+                                            <br>
+                                            <div class="col-12">
+                                                <button class="btn btn-dark" type="submit" name="register">Passwort ändern</button>
+                                            </div>
+                                        </form>';
+                                        
+                                        // Meldungen anzeigen, falls vorhanden
+                                        if (isset($_SESSION['password_change_success'])) {
+                                            echo '<p class="success-message">' . $_SESSION['password_change_success'] . '</p>';
+                                            unset($_SESSION['password_change_success']); // Meldung entfernen, damit sie nicht erneut angezeigt wird
+                                        }
+                                        if (isset($_SESSION['password_change_error'])) {
+                                            echo '<p class="error-message">' . $_SESSION['password_change_error'] . '</p>';
+                                            unset($_SESSION['password_change_error']); // Meldung entfernen, damit sie nicht erneut angezeigt wird
+                                        }
+                                        
+                                        echo '</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>';
+        } else {
+            echo 'Benutzer nicht gefunden';
+        }
+    } else {
+        echo 'Benutzer nicht eingeloggt';
+    }
+    ?>
 
-                                    <option <?php if($_SESSION["updateAnrede"] == "Herr")
-                                        echo "selected"; ?>
-                                        value="Herr">Herr</option>
-                                    <option <?php if($_SESSION["updateAnrede"] == "2")
-                                        echo "selected"; ?> value="2">Frau
-                                    </option>
-                                    <option <?php if($_SESSION["updateAnrede"] == "3")
-                                        echo "selected"; ?> value="3">
-                                        Divers</option>
-                                    <option <?php if($_SESSION["updateAnrede"] == "4")
-                                        echo "selected"; ?> value="5">
-                                        --</option>
-                                </select>
-                                <br>
-                                <div class="form-group">
-                                    <label for="vorname">Vorname</label>
-                                    <input type="text" class="form-control" name="vorname" id="vorname"
-                                        value="<?php echo $_SESSION["updateVorname"] ?>">
-                                </div>
-                                <br>
-                                <div class="form-group">
-                                    <label for="lastname">Nachname</label>
-                                    <input type="text" class="form-control" name="lastname" id="lastname"
-                                        value="<?php echo $_SESSION["updateNachname"] ?>">
-                                </div>
-                                <br>
-                                <div class="form-group">
-                                    <label for="email">E-mail Adresse</label>
-                                    <input type="email" class="form-control" name="email" id="email"
-                                        placeholder="example@email.com"
-                                        value="<?php echo $_SESSION["updateEmail"] ?>">
-                                </div>
-                                <br>
-                                <div class="form-group">
-                                    <label for="username">Benutzername</label>
-                                    <input type="text" class="form-control" name="username" id="username"
-                                        placeholder="Gewünschter Benutzername"
-                                        value="<?php echo $_SESSION["updateUsername"] ?>">
-                                </div>
-                                <br>
-                                <?php echo $msg; ?>
-                                <br>
-                                <br>
-                                <div class="col-12">
-                                    <button class="btn btn-dark" type="submit" name="register">Änderungen
-                                        speichern</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="p-3 py-5">
-                        <h4 class="text-right">Passwort ändern</h4>
-                        <form action="" method="post">
-                            <div class="form-group">
-                                <label for="password">Altes Passwort</label>
-                                <input type="password" class="form-control" name="password" id="password" value="">
-                            </div>
-                            <br>
-                            <div class="form-group">
-                                <label for="password_2">Neues Passwort</label>
-                                <input type="password" class="form-control" name="password_2" id="password_2" value="">
-                            </div>
-                            <br>
-                            <?php echo $msg_passwort; ?>
-                            <br>
-                            <br>
-                            <div class="col-12">
-                                <button class="btn btn-dark" type="submit" name="register">Passwort ändern</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+<div class="footer"> <!-- Diese Div umschließt den Footer-Inhalt -->
+            <?php
+            include 'footer.php'; // Hier wird der Footer eingefügt
+            ?>
         </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-        crossorigin="anonymous"></script>
+        </div>
 </body>
-<?php include 'footer.php' ?>
 
 </html>

@@ -1,3 +1,7 @@
+<?php
+include 'nav.php';
+include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
+?>
 <!DOCTYPE html>
 <html>
 
@@ -64,15 +68,11 @@
 </head>
 
 <body>
-    <?php
-    include 'nav.php';
-    include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
-    
+    <?php    
 
     $nachnameErr = $emailErr = $usernameErr = $anredeErr = $vornameErr = $passwordErr = $repasswordErr = $geburtsdatumErr = $regErfolg = "";
     $username = $email = $geburtsdatum = $anrede = $nachname = $vorname = $password = $repassword = "";
 
-    require("dbaccess.php");
 
     if($_SERVER["REQUEST_METHOD"] == "POST") {
         // Validierung für Vorname
