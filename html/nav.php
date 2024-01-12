@@ -50,10 +50,10 @@ if(isset($_SESSION["user"])) {
         <nav class="navbar navbar-expand-lg navbar-light">
             <div class="container">
                 <!-- Logo -->
-                 <a href="#" class="navbar-brand custom-logo"> <!-- Füge die neue Klasse hier hinzu -->
-                    <img src="../images/Logo.png" alt="Helios Hotel Logo" height="100">
+                <a href="index.php" class="navbar-brand">
+                    <img src="../images/Logo.png" alt="Helios Hotel Logo" height="150">
                 </a>
-                <a href="#" class="navbar-brand">Hotel Helios</a>
+                <a href="index.php" class="navbar-brand">Hotel Helios</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -81,6 +81,9 @@ if(isset($_SESSION["user"])) {
                                 </li>';
                                 echo '<li class="nav-item">
                                     <a href="news.php" class="nav-link">Poste neue News</a>
+                                </li>';
+                                echo '<li class="nav-item">
+                                    <a href="manage_users.php" class="nav-link">Manage User</a>
                                 </li>';
                             } else {
                                 // Links für andere Benutzer

@@ -55,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       file_put_contents("reservations.txt", $string_data, FILE_APPEND);
 
       // Erfolgsmeldung für erfolgreiche Buchung
-      $conf_msg = "Reservation erfolgreich! Sie können Ihre Reservierungen <a href='./made_reservations.php'>hier</a> sehen.";
+      $conf_msg = "Reservation erfolgreich! Sie können Ihre Reservierungen <a href='./meine_reservations.php'>hier</a> sehen.";
     }
   } else {
     $isOk = 0;
@@ -131,7 +131,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       background-color: rgba(255, 255, 255, 1.3);
     }
 
-    /*Reservierungssachen*/
+    /Reservierungssachen/
 
     .body {
       background-color: white;
@@ -285,16 +285,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <!-- Slideshow -->
   <div class="slideshow">
     <div class="slide active">
-      <img src="https://images.unsplash.com/photo-1683914791867-20c3fa8734fe?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Slide 1">
+      <img src="../images/Hotel_Hintergrund.jpg" alt="Slide 1">
     </div>
     <div class="slide">
-      <img src="https://images.unsplash.com/photo-1683914791874-2dcb78e58e09?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Slide 2">
+      <img src="../images/Hotel_Login.png" alt="Slide 2">
     </div>
     <div class="slide">
-      <img src="https://images.unsplash.com/photo-1445019980597-93fa8acb246c?q=80&w=2074&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Slide 3">
+      <img src="../images/Hotel_Hintergrund.jpg" alt="Slide 3">
     </div>
     <div class="slide">
-      <img src="https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Slide 4">
+      <img src="../images/Hotel_Hintergrund.png" alt="Slide 4">
     </div>
 
     <!-- Navigation Pfeile -->
@@ -338,82 +338,83 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     style="background-image: url('https://images.unsplash.com/photo-1615801627253-eae9c5be334e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D;">
 
     <div class="container py-5 h-100">
-  <div class="row d-flex justify-content-center align-items-center h-100">
-    <div class="col col-xl-10">
-      <div class="card" style="border-radius: 1rem;">
-        <div class="row g-0">
-          <div class="col-md-6 col-lg-7 d-flex align-items-center">
-            <div class="body p-4 p-lg-5 text-black">
-              <h1 class="h3 mb-3 font-weight-normal text-center">Reservierung</h1>
-              <?php if ($isOk == 0) {
-                echo "<div class='error_msg display-8'> $error_msg </div>";
-              } else { ?>
-              <?php }
-              echo "<div class='display-8'> $conf_msg </div>" ?>
-              <form action="" method="post">
-                <div class="form-group">
-                  <label for="anreise">Anreisedatum</label>
-                  <input type="date" name="anreise" class="form-control input-with-post-icon datepicker"
-                    min="<?php echo date('Y-m-d'); ?>" inline="true" placeholder="Anreisedatum">
-                </div>
-                <div class="form-group">
-                  <label for="abreise">Abreisedatum</label>
-                  <input type="date" name="abreise" class="form-control input-with-post-icon datepicker"
-                    min="<?php echo date('Y-m-d'); ?>" inline="true" placeholder="Abreisedatum">
-                </div>
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col col-xl-10">
+          <div class="" style="border-radius: 1rem;">
+            <div class="row g-0">
+              <br>
+              <br>
+              <div class="col-md-6 col-lg-7 d-flex align-items-center">
+                <div class="body p-4 p-lg-5 text-black">
+                  <h1 class="h3 mb-3 font-weight-normal text-center">Reservierung</h1>
+                  <?php if ($isOk == 0) {
+                    echo "<div class='error_msg display-8'> $error_msg </div>";
+                  } else { ?>
+                  <?php }
+                  echo "<div class='display-8'> $conf_msg </div>" ?>
+                  <form action="" method="post">
+                    <div class="form-group ">
+                      <label for="anreise">Anreisedatum</label>
+                      <input type="date" name="anreise" class="form-control input-with-post-icon datepicker"
+                        min="<?php echo date('Y-m-d'); ?>" inline="true" placeholder="Anreisedatum">
+                    </div>
+                    <div class="form-group mt-4">
+                      <label for="abreise">Abreisedatum</label>
+                      <input type="date" name="abreise" class="form-control input-with-post-icon datepicker"
+                        min="<?php echo date('Y-m-d'); ?>" inline="true" placeholder="Abreisedatum">
+                    </div>
 
-                <div class="form-group">
-                  <label for="zimmertyp">Zimmertyp</label>
-                  <select class="form-select" aria-label="room" name="room">
-                    <option selected disabled value="">Bitte wählen Sie den Zimmertyp...</option>
-                    <option value="Single">Single Zimmer</option>
-                    <option value="Double">Double Zimmer</option>
-                    <option value="Suite">Suite</option>
-                  </select>
-                </div>
+                    <div class="form-group mt-4">
+                      <label for="zimmertyp">Zimmertyp</label>
+                      <select class="form-select" aria-label="room" name="room">
+                        <option selected disabled value="">Bitte wählen Sie den Zimmertyp...</option>
+                        <option value="Single">Single Zimmer</option>
+                        <option value="Double">Double Zimmer</option>
+                        <option value="Suite">Suite</option>
+                      </select>
+                    </div>
 
-                <div class="form-group">
-                  <label for="breakfast">Frühstück</label>
-                  <select class="form-select" aria-label="breakfast" name="breakfast">
-                    <option selected disabled value="">Möchten Sie Frühstück?</option>
-                    <option value="Ja">Ja</option>
-                    <option value="Nein">Nein</option>
-                  </select>
-                </div>
+                    <div class="form-group mt-4">
+                      <label for="breakfast">Frühstück</label>
+                      <select class="form-select" aria-label="breakfast" name="breakfast">
+                        <option selected disabled value="">Möchten Sie Frühstück?</option>
+                        <option value="Ja">Ja</option>
+                        <option value="Nein">Nein</option>
+                      </select>
+                    </div>
 
-                <div class="form-group">
-                  <label for="park">Parkplatz</label>
-                  <select class="form-select" aria-label="park" name="park">
-                    <option selected disabled value="">Möchten Sie einen Parkplatz reservieren?</option>
-                    <option value="Ja">Ja</option>
-                    <option value="Nein">Nein</option>
-                  </select>
-                </div>
+                    <div class="form-group mt-4">
+                      <label for="park">Parkplatz</label>
+                      <select class="form-select" aria-label="park" name="park">
+                        <option selected disabled value="">Möchten Sie einen Parkplatz reservieren?</option>
+                        <option value="Ja">Ja</option>
+                        <option value="Nein">Nein</option>
+                      </select>
+                    </div>
 
-                <div class="form-group">
-                  <label for="tiere">Haustiere</label>
-                  <select class="form-select" aria-label="tiere" name="tiere">
-                    <option selected disabled value="">Bringen Sie Ihre Haustiere mit?</option>
-                    <option value="Ja">Ja</option>
-                    <option value="Nein">Nein</option>
-                  </select>
-                </div>
+                    <div class="form-group mt-4">
+                      <label for="tiere">Haustiere</label>
+                      <select class="form-select" aria-label="tiere" name="tiere">
+                        <option selected disabled value="">Bringen Sie Ihre Haustiere mit?</option>
+                        <option value="Ja">Ja</option>
+                        <option value="Nein">Nein</option>
+                      </select>
+                    </div>
 
-                <div class="btns">
-                  <button type="submit" name="reservieren" value="reserieren"
-                    class="btn btn-dark">Reservieren</button>
+                    <br>
+                    <div class="btns">
+                      <button type="submit" name="reservieren" value="reserieren"
+                        class="btn btn-dark">Reservieren</button>
+                    </div>
+                  </form>
                 </div>
-              </form>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-
-
-
 </body>
 
 </html>

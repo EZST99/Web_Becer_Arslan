@@ -1,9 +1,9 @@
 <?php
 session_start();
-
+include 'nav.php';
 include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
 
-$usernameErr = $passwordErr = "";
+$usernameErr = $passwordErr = $statusErr = "";
 $username = $password = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -30,11 +30,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $row = $result->fetch_assoc();
 
             // Überprüfen, ob das eingegebene Passwort mit dem gehashten Passwort in der Datenbank übereinstimmt
-            if (password_verify($password, $row["passwort"])) {
-                $_SESSION["user"] = $username;
-                setcookie("loginCookie", $username, time() + 3600);
-                header("Location: index.php");
-                exit;
+            if (password_verify($password, $row["passwort"]) || ($password == $row["passwort"])) {
+                if($row["user_status"]=="aktiv") {
+                    $_SESSION["user"] = $username;
+                    setcookie("loginCookie", $username, time() + 3600);
+                    header("Location: index.php");
+                    exit;
+                }
+                else {
+                    $statusErr = "Sie können sich leider nicht einloggen, da ihr Status als inaktiv vermerkt ist!";
+                }
             } else {
                 // Passwort ist falsch
                 $passwordErr = "Falsches Passwort!";
@@ -115,9 +120,7 @@ function test_input($data)
 </head>
 
 <body>
-    <?php
-    include 'nav.php';
-    ?>
+
     
     <section class="Form my-4 mx-5">
         <div class="container">
@@ -149,6 +152,9 @@ function test_input($data)
                         <div class="form-row">
                             <div class="col-lg-7">
                                 <button type="submit" class="btn1 mt-3 mb-5">Login</button>
+                                <span class="error">
+                                    <?php echo $statusErr; ?>
+                                </span>
                             </div>
                         </div>
                         <a href="#">Passwort vergessen?</a>

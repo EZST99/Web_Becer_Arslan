@@ -1,7 +1,7 @@
 <?php
 session_start();
+include 'nav.php';
 include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
-
 ?>
 
 <!DOCTYPE html>
@@ -15,9 +15,6 @@ include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
 </head>
 
 <body>
-    <?php
-    include 'nav.php';
-    ?>
 
     <div class="container mt-5">
         <h1 class="text-center mb-4">News Posten</h1>

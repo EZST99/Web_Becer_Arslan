@@ -1,3 +1,7 @@
+<?php
+  session_start();
+  include 'nav.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,9 +15,6 @@
 </head>
 
 <body>
-  <?php
-  include 'nav.php';
-  ?>
 
   <!-- FAQ Bereich -->
   <section class="p-5 body-content">

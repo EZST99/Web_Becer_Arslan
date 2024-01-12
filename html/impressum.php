@@ -1,3 +1,8 @@
+<?php
+  session_start();
+  include 'nav.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,9 +25,6 @@
 </head>
 
 <body>
-    <?php
-    include 'nav.php';
-    ?>
     <section class="container">
         <h1 class="text-center" style="margin-bottom: 40px; margin-top: 40px"> Impressum</h1>
         <div class="row text-center"> <!-- Änderung in der Bootstrap-Klasse hier -->
