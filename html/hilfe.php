@@ -1,21 +1,38 @@
 <?php
-  session_start();
-  include 'nav.php';
+session_start();
+include 'nav.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-  <link rel="stylesheet" href="style.css">
-  <title>Hilfeseite</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <title>Hilfeseite</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%; /* Stellt sicher, dass der Body die gesamte Höhe des Viewports einnimmt */
+            display: flex;
+            flex-direction: column; /* Richtet Kinder-Elemente vertikal aus */
+        }
+
+        .content {
+            flex-grow: 1; /* Lässt den Inhalt wachsen und den verfügbaren Platz einnehmen */
+        }
+
+        footer {
+            flex-shrink: 0; /* Verhindert, dass der Footer zusammengedrückt wird */
+        }
+    </style>
 </head>
 
 <body>
-
+<div class="content">
   <!-- FAQ Bereich -->
   <section class="p-5 body-content">
     <div class="container">
@@ -80,6 +97,11 @@
       </div>
     </div>
   </section>
+  </div>
+            <?php
+            include 'footer.php'; // Hier wird der Footer eingefügt
+            ?>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>

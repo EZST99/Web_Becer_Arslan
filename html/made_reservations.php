@@ -1,39 +1,7 @@
 <?php
 session_start();
-
-
- // Sicherstellen, dass der Benutzer angemeldet ist, bevor auf diese Seite zugegriffen wird.
- // Falls nicht, wird der Benutzer zur Login-Seite weitergeleitet.
-
-if (!isset($_SESSION['user'])) {
-    header('Location: login_page.php');
-}
-
-
- // Dateiinhalt der Reservierungen aus "reservations.txt" lesen.
- // Die Inhalte werden durch das Zeichen "}" getrennt und in ein Array gespeichert.
- 
-$file_content = file_get_contents("./reservations.txt");
-$serialized_arrays = explode("}", $file_content);
-$reservations = [];
-
-
- // Durchlaufe jedes serialisierte String und versuche, es zu deserialisieren.
- // Gültige deserialisierte Daten, die ein Array sind, werden zur Liste der Reservierungen hinzugefügt.
-foreach ($serialized_arrays as $serialized_array) {
-    if (!empty($serialized_array)) {
-        // Versuch, die Daten zu deserialisieren
-        $unserialized_data = unserialize($serialized_array . '}');
-
-        
-         // Überprüfen, ob die Deserialisierung erfolgreich war und ob die deserialisierten Daten ein Array sind.
-         // Falls ja, werden sie zur Liste der Reservierungen hinzugefügt.
-        if ($unserialized_data !== false && is_array($unserialized_data)) {
-            $reservations[] = $unserialized_data;
-        }
-    }
-}
-
+include 'nav.php';
+include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
 ?>
 
 <!DOCTYPE html>
@@ -42,56 +10,132 @@ foreach ($serialized_arrays as $serialized_array) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
     <title>Reservierungen</title>
     <style>
-        .table th{
-            background: rgba(233, 225, 213, 0.8);
+        /* Globale Styles für den Körper (body) und den Footer */
+        body {
+            color: #566787;
+            background: #f5f5f5;
+            font-family: 'Varela Round', sans-serif;
+            font-size: 14px;
+            background-image: url('../images/admin_background.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            /* Dies stellt sicher, dass der Footer am unteren Rand bleibt */
+            margin: 0;
+            /* Entfernen Sie den Standardseitenrand */
+        }
+
+        .container-xl {
+            flex: 1;
+            /* Nimmt den verfügbaren vertikalen Platz ein */
+        }
+
+        /* Styles für die Tabelle und den Footer */
+        .table-responsive {
+            margin: 30px 0;
+        }
+
+        .table-wrapper {
+            min-width: 800px;
+            background: rgba(255, 255, 255, 0.92);
+            padding: 20px 25px;
+            border-radius: 5px;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+        }
+
+        .table-title {
+            padding-bottom: 15px;
+            background: #dfd2bf;
+            color: #fff;
+            padding: 15px 30px;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .table-title h2 {
+            margin: 5px 0 0;
+            font-size: 24px;
         }
     </style>
 </head>
 
 <body>
-    <?php include("nav.php"); ?>
-    <div class="bg-image" style="background-image: url('https://images.unsplash.com/photo-1507652313519-d4e9174996dd?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); height: 100vh; background-repeat: no-repeat; background-size: cover; background-position:center;">
-    <div class="container">
-        <div class="display-4 text-bold row justify-content-center mb-2">Ihre Reservierungen</div>
+
+    <div class="container-xl">
         <div class="table-responsive">
-            <!-- Wenn Reservierungen vorhanden sind, erstellen eine Tabelle -->
-            <?php if (!empty($reservations)) { ?>
-    <table class="table table-bordered table-hover custom-table">
-    <thead class="dark-brown-table-header">
-    <tr>
-        <th scope="col">Anreise</th>
-        <th scope="col">Abreise</th>
-        <th scope="col">Zimmertyp</th>
-        <th scope="col">Frühstück</th>
-        <th scope="col">Parkplatz</th>
-        <th scope="col">Haustiere</th>
-    </tr>
-</thead>
-        <tbody>
-            <?php foreach ($reservations as $reservation) { ?>
-                <tr>
-                    <td><?php echo $reservation['anreise'] ?></td>
-                    <td><?php echo $reservation['abreise'] ?></td>
-                    <td><?php echo $reservation['room'] ?></td>
-                    <td><?php echo $reservation['breakfast'] ?></td>
-                    <td><?php echo $reservation['park'] ?></td>
-                    <td><?php echo $reservation['tiere'] ?></td>
-                </tr>
-            <?php } ?>
-        </tbody>
-    </table>
-<?php } else { ?>
-    <p>Keine Reservierungen gefunden.</p>
-<?php } ?>
+            <div class="table-wrapper">
+                <div class="table-title">
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <h2><b>Reservierungen</b></h2>
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Anreise</th>
+                            <th>Abreise</th>
+                            <th>Zimmertyp</th>
+                            <th>Frühstück</th>
+                            <th>Parkplatz</th>
+                            <th>Haustiere</th>
+                            <th>Buchungsdatum</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $query = "SELECT users.vorname, users.nachname, users.email, reservierung.anreisedatum, reservierung.abreisedatum, reservierung.zimmertyp, reservierung.fruehstueck, reservierung.parkplatz, reservierung.haustiere, reservierung.buchungstag, reservierung.res_status FROM users INNER JOIN reservierung ON users.reservierungs_id = reservierung.reservierungs_id ORDER BY users.nachname ASC";
+                        $result = $conn->query($query);
+
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                $vorname = $row["vorname"];
+                                $nachname = $row["nachname"];
+                                $email = $row["email"];
+                                $anreisedatum = $row["anreisedatum"];
+                                $abreisedatum = $row["abreisedatum"];
+                                $zimmertyp = $row["zimmertyp"];
+                                $fruehstueck = $row["fruehstueck"];
+                                $parkplatz = $row["parkplatz"];
+                                $haustiere = $row["haustiere"];
+                                $buchungstag = $row["buchungstag"];
+                                $res_status = $row["res_status"];
+
+                                echo '<tr>
+                                        <td>' . $nachname . ' ' . $vorname . '</td>
+                                        <td>' . $email . '</td>
+                                        <td>' . $anreisedatum . '</td>
+                                        <td>' . $abreisedatum . '</td>
+                                        <td>' . $zimmertyp . '</td>
+                                        <td>' . $fruehstueck . '</td>
+                                        <td>' . $parkplatz . '</td>
+                                        <td>' . $haustiere . '</td>
+                                        <td>' . $buchungstag . '</td>
+                                        <td>' . $res_status . '</td>
+                                    </tr>';
+                            }
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <?php
+    include 'footer.php';
+    ?>
 </body>
 
 </html>

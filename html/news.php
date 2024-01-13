@@ -12,10 +12,27 @@ include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create News</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%; /* Stellt sicher, dass der Body die gesamte Höhe des Viewports einnimmt */
+            display: flex;
+            flex-direction: column; /* Richtet Kinder-Elemente vertikal aus */
+        }
+
+        .content {
+            flex-grow: 1; /* Lässt den Inhalt wachsen und den verfügbaren Platz einnehmen */
+        }
+
+        footer {
+            flex-shrink: 0; /* Verhindert, dass der Footer zusammengedrückt wird */
+        }
+    </style>
 </head>
 
 <body>
-
+<div class="content">
     <div class="container mt-5">
         <h1 class="text-center mb-4">News Posten</h1>
 
@@ -74,7 +91,10 @@ include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
         </form>
 
     </div>
-
+    </div>
+    <?php
+    include 'footer.php';
+    ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
