@@ -85,6 +85,7 @@ include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
                             <th>Name</th>
                             <th>EMail</th>
                             <th>Status</th>
+                            <th>Reservierungen</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -92,25 +93,32 @@ include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
                         <?php
                         $users_query = $conn->query("SELECT vorname, nachname, user_status, email FROM users ORDER BY nachname ASC");
 
-                        if($users_query->num_rows > 0) {
+                        if ($users_query->num_rows > 0) {
                             // Iterate through each news item and display them
-                            while($row = $users_query->fetch_assoc()) {
+                            while ($row = $users_query->fetch_assoc()) {
                                 $vorname = $row["vorname"];
                                 $nachname = $row["nachname"];
                                 $email = $row["email"];
                                 $status = $row["user_status"];
 
-                                echo '<tr>
-        <td>'.$nachname.' '.$vorname.'</td>
-        <td>'.$email.'</td>';
 
-                                if($status == 'aktiv') {
-                                    echo '<td><span class="status text-success">&bull;</span> '.$status.'</td>
-                                    <td><a href="user_bearbeiten.php?email='.$email.'">Bearbeiten</a></td>
+                                echo '
+                                <tr>
+        <td>' . $nachname . ' ' . $vorname . '</td>
+        <td>' . $email . '</td>';
+
+
+                                if ($status == 'aktiv') {
+                                    echo '<td><span class="status text-success">&bull;</span> ' . $status . '</td>
+                                    
+        <td><a href="admin_user_res.php?email=' . $email . '">Details</a></td>
+                                    <td><a href="user_bearbeiten.php?email=' . $email . '">Bearbeiten</a></td>
             </tr>';
                                 } else {
-                                    echo '<td><span class="status text-danger">&bull;</span> '.$status.'</td>
-                                    <td><a href="user_bearbeiten.php?email='.$email.'">Bearbeiten</a></td>
+                                    echo '<td><span class="status text-danger">&bull;</span> ' . $status . '</td>
+                                    
+        <td><a href="admin_user_res.php?email='.$email.'">Details</a></td>
+                                    <td><a href="user_bearbeiten.php?email=' . $email . '">Bearbeiten</a></td>
             </tr>';
                                 }
                             }

@@ -60,6 +60,7 @@ if (isset($_SESSION["user"])) {
                             echo '<li class="nav-item"><a href="hilfe.php" class="nav-link">FAQ</a></li>';
                             echo '<li class="nav-item"><a href="news.php" class="nav-link">Post News</a></li>';
                             echo '<li class="nav-item"><a href="manage_users.php" class="nav-link">Manage User</a></li>';
+                            echo '<li class="nav-item"><a href="made_reservations.php" class="nav-link">Reservierungen</a></li>';
                         } else {
                             // Standardlinks für andere Benutzer und nicht eingeloggte Benutzer
                             echo '<li class="nav-item"><a href="impressum.php" class="nav-link">Impressum</a></li>';

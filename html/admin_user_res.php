@@ -81,30 +81,51 @@ include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
-                            <th>Email</th>
-                            <th>Reservierungs ID</th>
-                            <th> </th>
-
+                            <th>Anreise</th>
+                            <th>Abreise</th>
+                            <th>Zimmertyp</th>
+                            <th>Frühstück</th>
+                            <th>Parkplatz</th>
+                            <th>Haustiere</th>
+                            <th>Kosten</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                            $query = "SELECT user_reservierungen.reservierungs_id, user_reservierungen.user_email FROM user_reservierungen INNER JOIN reservierung ON user_reservierungen.reservierungs_id = reservierung.reservierungs_id";
+                        if(isset($_GET['email'])) {
+                        $email = $_GET['email'];
+
+                            $query = "SELECT user_reservierungen.reservierungs_id, reservierung.anreisedatum, reservierung.abreisedatum, reservierung.zimmertyp, reservierung.fruehstueck, reservierung.parkplatz, reservierung.haustiere, reservierung.kosten, reservierung.res_status FROM user_reservierungen INNER JOIN reservierung ON user_reservierungen.reservierungs_id = reservierung.reservierungs_id WHERE user_reservierungen.user_email = '$email'";
                             $result = $conn->query($query);
 
-                        if ($result->num_rows > 0) {
-                            while ($row = $result->fetch_assoc()) {
-                                $reservierungs_id = $row["reservierungs_id"];
-                                $email = $row["user_email"];
-                                
+                            if ($result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) {
+                                    $anreisedatum = $row["anreisedatum"];
+                                    $abreisedatum = $row["abreisedatum"];
+                                    $zimmertyp = $row["zimmertyp"];
+                                    $fruehstueck = $row["fruehstueck"];
+                                    $parkplatz = $row["parkplatz"];
+                                    $haustiere = $row["haustiere"];
+                                    $kosten = $row["kosten"];
+                                    $res_status = $row["res_status"];
 
-                                echo '<tr>
-                                        <td>' . $email . '</td>
-                                        <td>' . $reservierungs_id . '</td>
-                                        <td><a href="reservierung_bearbeiten.php?email='.$email.'&reservierungs_id='.$reservierungs_id.'">Bearbeiten</a></td>
-                                    </tr>';
+                                    echo '<tr>
+                                            <td>' . $anreisedatum . '</td>
+                                            <td>' . $abreisedatum . '</td>
+                                            <td>' . $zimmertyp . '</td>
+                                            <td>' . $fruehstueck . '</td>
+                                            <td>' . $parkplatz . '</td>
+                                            <td>' . $haustiere . '</td>
+                                            <td>' . $kosten . '</td>
+                                            <td>' . $res_status . '</td>
+                                        </tr>';
+                                }
                             }
-                        }
+
+
+                        
+                    }
                         ?>
                     </tbody>
                 </table>
