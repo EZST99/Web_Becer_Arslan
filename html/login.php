@@ -84,6 +84,11 @@ function test_input($data)
 
         body {
             background: rgb(214, 198, 180);
+            background-image: url('https://plus.unsplash.com/premium_photo-1669863547155-be11a345d599?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); 
+            background-position:center; 
+            background-size:cover; 
+            background-repeat:no-repeat; 
+            height:100%;
         }
 
         .row {
@@ -121,7 +126,8 @@ function test_input($data)
 
 <body>
 
-    
+<div class="bg-image"
+        style="background-image: url('https://plus.unsplash.com/premium_photo-1669863547155-be11a345d599?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); background-position:center; background-size:cover; background-repeat:no-repeat; height:100%;">
     <section class="Form my-4 mx-5">
         <div class="container">
             <div class="row no-gutters">
@@ -157,13 +163,15 @@ function test_input($data)
                                 </span>
                             </div>
                         </div>
-                        <a href="#">Passwort vergessen?</a>
                         <p>Noch gar keinen Account? <a href="registrierung.php">Registriere dich hier</a></p>
                     </form>
                 </div>
             </div>
         </div>
     </section>
+    <?php
+    include 'footer.php';
+    ?>
 </body>
 
 </html>

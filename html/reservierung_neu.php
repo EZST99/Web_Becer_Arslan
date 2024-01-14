@@ -1,12 +1,12 @@
 <?php
+include 'dbaccess.php';
 session_start();
+
 if (!isset($_SESSION['user'])) {
   header('Location: login_page.php');
 }
 
-
-// Process form data
-$conf_msg = $anreise = $abreise = $room = $park = $tiere = $breakfast = "";
+$conf_msg = $anreise = $abreise = $room = $breakfast = $park = $tiere = "";
 $error_msg = "Bitte füllen Sie sowohl das Anreisedatum als auch das Abreisedatum aus!";
 $isOk = 1;
 
@@ -30,17 +30,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $tiere = $_POST['tiere'];
   }
 
-
-  // Überprüfen, ob Anreise- und Abreisedatum im Buchungsformular ausgefüllt sind.
-  if (!empty($_POST['anreise'] && $_POST['abreise'])) {
-
-    // Überprüfen, ob das Anreisedatum vor dem Abreisedatum liegt.
-    // Wenn nicht, wird ein Fehler gemeldet, andernfalls werden die Buchungsinformationen gespeichert.
-    if (!($anreise <= $abreise)) {
-      $isOk = 0;
-      $error_msg = "Das Anreisedatum sollte vor dem Abreisedatum liegen!";
-    } else {
-      // Buchungsinformationen in ein Array speichern
+  if (!empty($anreise) && !empty($abreise)) {
+    if ($anreise <= $abreise) {
       $reservation = [
         'anreise' => $anreise,
         'abreise' => $abreise,
@@ -50,30 +41,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         'tiere' => $tiere
       ];
 
-      // Buchungsinformationen serialisieren und in einer Datei speichern (an bestehende Daten anhängen)
       $string_data = serialize($reservation);
       file_put_contents("reservations.txt", $string_data, FILE_APPEND);
 
-      // Erfolgsmeldung für erfolgreiche Buchung
-      $conf_msg = "Reservation erfolgreich! Sie können Ihre Reservierungen <a href='./meine_reservations.php'>hier</a> sehen.";
+      $sql = "INSERT INTO reservierung (anreisedatum, abreisedatum, zimmertyp, fruehstueck, parkplatz, haustiere) VALUES ('$anreise', '$abreise', '$room', '$breakfast', '$park', '$tiere')";
+
+      if (mysqli_query($conn, $sql)) {
+        $conf_msg = "Reservierung erfolgreich! Sie können Ihre Reservierungen <a href='./made_reservations.php'>hier</a> sehen.";
+      } else {
+        $error_msg = "Fehler beim Hinzufügen der Reservierung in die Datenbank: " . mysqli_error($conn);
+      }
+
+      mysqli_close($conn);
+    } else {
+      $isOk = 0;
+      $error_msg = "Das Anreisedatum sollte vor dem Abreisedatum liegen!";
     }
   } else {
     $isOk = 0;
   }
 }
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
-    <title>Hotel Reservierung</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
+  <title>Hotel Reservierung</title>
   <style>
     /* Stile für die Vollbild-Slideshow */
     .slideshow {
@@ -131,9 +131,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       background-color: rgba(255, 255, 255, 1.3);
     }
 
-    /Reservierungssachen/
-
-    .body {
+    /Reservierungssachen/ .body {
       background-color: white;
       padding: 20px;
       border-radius: 10px;
@@ -279,22 +277,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body>
-<?php
-    include 'nav.php';
-    ?>
+  <?php
+  include 'nav.php';
+  ?>
   <!-- Slideshow -->
   <div class="slideshow">
     <div class="slide active">
-      <img src="../images/Hotel_Hintergrund.jpg" alt="Slide 1">
+      <img src="https://images.unsplash.com/photo-1683914791874-2dcb78e58e09?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Slide 1">
     </div>
     <div class="slide">
-      <img src="../images/Hotel_Login.png" alt="Slide 2">
+      <img src="https://images.unsplash.com/photo-1683914791867-20c3fa8734fe?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Slide 2">
     </div>
     <div class="slide">
-      <img src="../images/Hotel_Hintergrund.jpg" alt="Slide 3">
+      <img src="https://images.unsplash.com/photo-1445019980597-93fa8acb246c?q=80&w=2074&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Slide 3">
     </div>
     <div class="slide">
-      <img src="../images/Hotel_Hintergrund.png" alt="Slide 4">
+      <img src="https://images.unsplash.com/photo-1600210491305-7396500b5b31?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Slide 4">
     </div>
 
     <!-- Navigation Pfeile -->
@@ -335,7 +333,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <br>
   <br>
   <div class="bg-image"
-    style="background-image: url('https://images.unsplash.com/photo-1615801627253-eae9c5be334e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D;">
+    style="background-image: url('https://images.unsplash.com/photo-1555181937-efe4e074a301?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D">
 
     <div class="container py-5 h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
@@ -370,40 +368,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <option selected disabled value="">Bitte wählen Sie den Zimmertyp...</option>
                         <option value="Single">Single Zimmer</option>
                         <option value="Double">Double Zimmer</option>
-                        <option value="Suite">Suite</option>
+                        <option value="Familiensuite">Familien Suite</option>
+                        <option value="Honeymoonsuite">Honeymoon Suite</option>
                       </select>
                     </div>
 
                     <div class="form-group mt-4">
                       <label for="breakfast">Frühstück</label>
                       <select class="form-select" aria-label="breakfast" name="breakfast">
-                        <option selected disabled value="">Möchten Sie Frühstück?</option>
-                        <option value="Ja">Ja</option>
-                        <option value="Nein">Nein</option>
+                        <option selected disabled value="">Möchten Sie Frühstück? (+15€ pro Tag)</option>
+                        <option value="1">Ja</option>
+                        <option value="0">Nein</option>
                       </select>
                     </div>
 
                     <div class="form-group mt-4">
                       <label for="park">Parkplatz</label>
                       <select class="form-select" aria-label="park" name="park">
-                        <option selected disabled value="">Möchten Sie einen Parkplatz reservieren?</option>
-                        <option value="Ja">Ja</option>
-                        <option value="Nein">Nein</option>
+                        <option selected disabled value="">Möchten Sie einen Parkplatz reservieren? (+15€ pro Tag)</option>
+                        <option value="1">Ja</option>
+                        <option value="0">Nein</option>
                       </select>
                     </div>
 
                     <div class="form-group mt-4">
                       <label for="tiere">Haustiere</label>
                       <select class="form-select" aria-label="tiere" name="tiere">
-                        <option selected disabled value="">Bringen Sie Ihre Haustiere mit?</option>
-                        <option value="Ja">Ja</option>
-                        <option value="Nein">Nein</option>
+                        <option selected disabled value="">Bringen Sie Ihre Haustiere mit? (+20€ pro Tag)</option>
+                        <option value="1">Ja</option>
+                        <option value="0">Nein</option>
                       </select>
                     </div>
 
                     <br>
                     <div class="btns">
-                      <button type="submit" name="reservieren" value="reserieren"
+                      <button type="submit" name="reservieren" value="reservieren"
                         class="btn btn-dark">Reservieren</button>
                     </div>
                   </form>
@@ -415,6 +414,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       </div>
     </div>
   </div>
+  <?php
+    include 'footer.php';
+    ?>
 </body>
 
 </html>

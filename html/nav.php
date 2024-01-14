@@ -2,7 +2,7 @@
 include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
 
 // Überprüfen, ob ein Benutzer angemeldet ist
-if(isset($_SESSION["user"])) {
+if (isset($_SESSION["user"])) {
     // Benutzer ist angemeldet, holen Sie den user_typ aus der Datenbank
     $username = $_SESSION["user"];
     $stmt = $conn->prepare("SELECT user_typ FROM users WHERE username = ?");
@@ -10,7 +10,7 @@ if(isset($_SESSION["user"])) {
     $stmt->execute();
     $result = $stmt->get_result();
 
-    if($result->num_rows === 1) {
+    if ($result->num_rows === 1) {
         $row = $result->fetch_assoc();
         $user_typ = $row["user_typ"];
         $_SESSION["user_typ"] = $user_typ;
@@ -37,15 +37,10 @@ if(isset($_SESSION["user"])) {
             padding-top: 2px;
             padding-bottom: 2px;
         }
-
-        .custom-logo {
-            margin-right: 2px; /* Hier kannst du den Abstand des Logos nach links anpassen */
-        }
     </style>
 </head>
 
 <body>
-    
     <header>
         <nav class="navbar navbar-expand-lg navbar-light">
             <div class="container">
@@ -59,31 +54,28 @@ if(isset($_SESSION["user"])) {
                 </button>
                 <div class="collapse navbar-collapse" id="navmenu">
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a href="index.php" class="nav-link">Home</a>
-                        </li>
                         <?php
-                        if(isset($_SESSION["user_typ"])) {
+                        if (isset($_SESSION["user_typ"])) {
                             $user_typ = $_SESSION["user_typ"];
-                            if($user_typ == "admin") {
+                            if ($user_typ == "admin") {
                                 // Links für Administrator
                                 echo '<li class="nav-item">
                                     <a href="index.php" class="nav-link">Home</a>
                                 </li>';
                                 echo '<li class="nav-item">
-                                    <a href="logout.php" class="nav-link">Logout</a>
+                                    <a href="zimmer.php" class="nav-link">Zimmer buchen</a>
                                 </li>';
                                 echo '<li class="nav-item">
-                                    <a href="profil.php" class="nav-link">Profil</a>
+                                    <a href="made_reservations.php" class="nav-link">Reservierungen</a>
                                 </li>';
                                 echo '<li class="nav-item">
                                     <a href="posted_news.php" class="nav-link">News</a>
                                 </li>';
                                 echo '<li class="nav-item">
-                                    <a href="news.php" class="nav-link">Poste neue News</a>
+                                    <a href="profil.php" class="nav-link">Profil</a>
                                 </li>';
                                 echo '<li class="nav-item">
-                                    <a href="manage_users.php" class="nav-link">Manage User</a>
+                                    <a href="logout.php" class="nav-link">Logout</a>
                                 </li>';
                             } else {
                                 // Links für andere Benutzer
@@ -91,13 +83,19 @@ if(isset($_SESSION["user"])) {
                                     <a href="index.php" class="nav-link">Home</a>
                                 </li>';
                                 echo '<li class="nav-item">
-                                    <a href="logout.php" class="nav-link">Logout</a>
+                                    <a href="zimmer.php" class="nav-link">Zimmer buchen</a>
+                                </li>';
+                                echo '<li class="nav-item">
+                                    <a href="made_reservations.php" class="nav-link">Reservierungen</a>
                                 </li>';
                                 echo '<li class="nav-item">
                                     <a href="profil.php" class="nav-link">Profil</a>
                                 </li>';
                                 echo '<li class="nav-item">
                                     <a href="posted_news.php" class="nav-link">News</a>
+                                </li>';
+                                echo '<li class="nav-item">
+                                    <a href="logout.php" class="nav-link">Logout</a>
                                 </li>';
                             }
                         } else {
@@ -110,6 +108,9 @@ if(isset($_SESSION["user"])) {
                             </li>';
                             echo '<li class="nav-item">
                                 <a href="registrierung.php" class="nav-link">Registrierung</a>
+                            </li>';
+                            echo '<li class="nav-item">
+                            <a href="zimmer.php" class="nav-link">Zimmer buchen</a>
                             </li>';
                             echo '<li class="nav-item">
                                 <a href="posted_news.php" class="nav-link">News</a>
