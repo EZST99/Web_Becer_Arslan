@@ -2,6 +2,7 @@
 session_start();
 include 'nav.php';
 include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
+
 ?>
 
 <!DOCTYPE html>
