@@ -95,8 +95,8 @@ include 'nav.php';
           </div>
         </div>
       </div>
-    </div>
   </section>
+  </div>
   </div>
             <?php
             include 'footer.php'; // Hier wird der Footer eingefügt

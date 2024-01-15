@@ -3,6 +3,7 @@ session_start();
 include 'nav.php';
 include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
 
+
 if ((isset($_SESSION["user_typ"]))) {
     $user_typ = $_SESSION["user_typ"];
     if ((!($user_typ == "admin"))) {
@@ -10,7 +11,6 @@ if ((isset($_SESSION["user_typ"]))) {
         exit();
     }
     else {
-
 
 ?>
 
