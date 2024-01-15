@@ -2,6 +2,16 @@
 session_start();
 include 'nav.php';
 include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
+
+if ((isset($_SESSION["user_typ"]))) {
+    $user_typ = $_SESSION["user_typ"];
+    if ((!($user_typ == "admin"))) {
+        header('Location: index.php');
+        exit();
+    }
+    else {
+
+
 ?>
 
 <!DOCTYPE html>
@@ -113,3 +123,11 @@ include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
 </body>
 
 </html>
+<?php
+    }
+}
+else {
+    header('Location: index.php');
+        exit();
+}
+?>

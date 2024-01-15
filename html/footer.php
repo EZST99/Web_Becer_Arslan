@@ -43,7 +43,7 @@ if (isset($_SESSION["user"])) {
 
 <body>
     <footer>
-        <nav class="navbar navbar-expand-lg navbar-light">
+        <nav class="navbar navbar-expand-lg navbar-light fixed-bottom">
             <div class="container">
                 <!-- Logo -->
                 <a href="#" class="navbar-brand">

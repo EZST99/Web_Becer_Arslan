@@ -2,8 +2,17 @@
 session_start();
 include 'nav.php';
 include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
-?>
 
+if ((isset($_SESSION["user_typ"]))) {
+    $user_typ = $_SESSION["user_typ"];
+    if ((!($user_typ == "admin"))) {
+        header('Location: index.php');
+        exit();
+    }
+    else {
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,8 +29,6 @@ include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
         body {
             color: #566787;
             background: #f5f5f5;
-            font-family: 'Varela Round', sans-serif;
-            font-size: 14px;
             background-image: url('../images/admin_background.png');
             background-size: cover;
             background-repeat: no-repeat;
@@ -159,3 +166,11 @@ include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
 </body>
 
 </html>
+<?php
+    }
+}
+else {
+    header('Location: index.php');
+        exit();
+}
+?>
