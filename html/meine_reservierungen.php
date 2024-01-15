@@ -19,8 +19,6 @@ include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
         body {
             color: #566787;
             background: #f5f5f5;
-            font-family: 'Varela Round', sans-serif;
-            font-size: 14px;
             background-image: url('../images/admin_background.png');
             background-size: cover;
             background-repeat: no-repeat;
@@ -31,6 +29,23 @@ include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
             /* Dies stellt sicher, dass der Footer am unteren Rand bleibt */
             margin: 0;
             /* Entfernen Sie den Standardseitenrand */
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-image: url('../images/admin_background.png');
+
+            height: 100%; /* Stellt sicher, dass der Body die gesamte Höhe des Viewports einnimmt */
+            display: flex;
+            flex-direction: column; /* Richtet Kinder-Elemente vertikal aus */
+        }
+
+        .content {
+            flex-grow: 1; /* Lässt den Inhalt wachsen und den verfügbaren Platz einnehmen */
+        }
+
+        footer {
+            flex-shrink: 0; /* Verhindert, dass der Footer zusammengedrückt wird */
         }
 
         .container-xl {

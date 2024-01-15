@@ -1,6 +1,7 @@
 <?php
 session_start();
-?>
+include 'nav.php'
+    ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -16,7 +17,7 @@ session_start();
     <style>
         .room-card {
             display: flex;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         .room-image {
@@ -48,7 +49,6 @@ session_start();
 </head>
 
 <body>
-    <?php include 'nav.php' ?>
 
     <div class="bg-image"
         style="background-image: url('https://plus.unsplash.com/premium_photo-1669863547155-be11a345d599?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); background-position:center; background-size:cover; background-repeat:no-repeat; height:100%;">
@@ -67,11 +67,11 @@ session_start();
                                 bequemes Einzelbett, umgeben von lebhaften, kunstvollen Textilien und Pflanzen. Ein
                                 idealer Rückzugsort für Alleinreisende, mit handgefertigten Möbeln und einer
                                 entspannenden Atmosphäre.</p>
-                                <button class="btn1" <?php if (!isset($_SESSION["user"])) { ?> 
-                                    onclick="location.href='./login.php'" <?php } else { ?> 
-                                        onclick="location.href='./reservierung_neu.php?room=Single'" <?php } ?>>
+                            <button class="btn1" <?php if (!isset($_SESSION["user"])) { ?>
+                                    onclick="location.href='./login.php'" <?php } else { ?>
+                                    onclick="location.href='./reservierung_neu.php?room=Single'" <?php } ?>>
                                 Jetzt Buchen
-</button>
+                            </button>
                         </div>
                     </div>
                 </div>

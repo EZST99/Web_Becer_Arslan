@@ -105,12 +105,14 @@ if (isset($_SESSION["user"])) {
                                     <a href="logout.php" class="nav-link">Logout</a>
                                 </li>';
                             }
+
                             if (isset($_SESSION["user"])) {
                                 echo '<li class="nav-item">
                                     <span class="nav-link text-success">Hallo ' . $_SESSION["user"] . '</span>
                                 </li>';
                             }
                             } else {
+
                             // Standardlinks für nicht angemeldete Benutzer
                             echo '<li class="nav-item">
                                 <a href="index.php" class="nav-link">Home</a>

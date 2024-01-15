@@ -20,6 +20,7 @@
             border-radius: 30px;
             box-shadow: 12px 12px 22px rgb(33, 32, 32);
         }
+        
     </style>
     <title>Impressum</title>
 </head>
@@ -91,6 +92,9 @@
             </div>
         </div>
     </div>
+    <br>
+    <br>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
