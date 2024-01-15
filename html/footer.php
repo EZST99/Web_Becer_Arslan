@@ -20,7 +20,6 @@ if (isset($_SESSION["user"])) {
 
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -51,7 +50,11 @@ if (isset($_SESSION["user"])) {
                     &copy; 2023, Hotel Helios GmbH, Inc
                 </a>
 
-                <div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#footerNavmenu">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="footerNavmenu">
                     <ul class="navbar-nav ms-auto">
                         <?php
                         if (isset($_SESSION["user_typ"]) && $_SESSION["user_typ"] == "admin") {
@@ -72,8 +75,6 @@ if (isset($_SESSION["user"])) {
             </div>
         </nav>
     </footer>
-
-
 </body>
 
 </html>
