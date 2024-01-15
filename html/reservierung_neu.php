@@ -3,63 +3,119 @@ include 'dbaccess.php';
 session_start();
 
 if (!isset($_SESSION['user'])) {
-  header('Location: login_page.php');
+    header('Location: login_page.php');
+    exit(); // Fügen Sie exit() hinzu, um sicherzustellen, dass das Skript nach der Weiterleitung beendet wird
 }
 
 $conf_msg = $anreise = $abreise = $room = $breakfast = $park = $tiere = "";
 $error_msg = "Bitte füllen Sie sowohl das Anreisedatum als auch das Abreisedatum aus!";
 $isOk = 1;
 
+// Zimmerkosten Mapping (pro Nacht)
+$zimmerkosten = [
+    'Single' => 100,
+    'Double' => 120,
+    'Familiensuite' => 160,
+    'Honeymoonsuite' => 180
+];
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  if (isset($_POST["anreise"])) {
-    $anreise = $_POST['anreise'];
-  }
-  if (isset($_POST['abreise'])) {
-    $abreise = $_POST['abreise'];
-  }
-  if (isset($_POST['room'])) {
-    $room = $_POST['room'];
-  }
-  if (isset($_POST['breakfast'])) {
-    $breakfast = $_POST['breakfast'];
-  }
-  if (isset($_POST['park'])) {
-    $park = $_POST['park'];
-  }
-  if (isset($_POST['tiere'])) {
-    $tiere = $_POST['tiere'];
-  }
-
-  if (!empty($anreise) && !empty($abreise)) {
-    if ($anreise <= $abreise) {
-      $reservation = [
-        'anreise' => $anreise,
-        'abreise' => $abreise,
-        'room' => $room,
-        'breakfast' => $breakfast,
-        'park' => $park,
-        'tiere' => $tiere
-      ];
-
-      $string_data = serialize($reservation);
-      file_put_contents("reservations.txt", $string_data, FILE_APPEND);
-
-      $sql = "INSERT INTO reservierung (anreisedatum, abreisedatum, zimmertyp, fruehstueck, parkplatz, haustiere) VALUES ('$anreise', '$abreise', '$room', '$breakfast', '$park', '$tiere')";
-
-      if (mysqli_query($conn, $sql)) {
-        $conf_msg = "Reservierung erfolgreich! Sie können Ihre Reservierungen <a href='./made_reservations.php'>hier</a> sehen.";
-      } else {
-        $error_msg = "Fehler beim Hinzufügen der Reservierung in die Datenbank: " . mysqli_error($conn);
-      }
-
-      mysqli_close($conn);
-    } else {
-      $isOk = 0;
-      $error_msg = "Das Anreisedatum sollte vor dem Abreisedatum liegen!";
+    if (isset($_POST["anreise"])) {
+        $anreise = $_POST['anreise'];
     }
-  } else {
-    $isOk = 0;
-  }
+    if (isset($_POST['abreise'])) {
+        $abreise = $_POST['abreise'];
+    }
+    if (isset($_POST['room'])) {
+        $room = $_POST['room'];
+    }
+    if (isset($_POST['breakfast'])) {
+        $breakfast = $_POST['breakfast'];
+    }
+    if (isset($_POST['park'])) {
+        $park = $_POST['park'];
+    }
+    if (isset($_POST['tiere'])) {
+        $tiere = $_POST['tiere'];
+    }
+
+    if (!empty($anreise) && !empty($abreise)) {
+        if ($anreise <= $abreise) {
+            // Berechnen Sie die Anzahl der Nächte
+            $anreiseDatum = new DateTime($anreise);
+            $abreiseDatum = new DateTime($abreise);
+            $anzahlNaechte = $abreiseDatum->diff($anreiseDatum)->days;
+
+            // Berechnen Sie die Kosten basierend auf dem ausgewählten Zimmertyp und Anzahl der Nächte
+            if (array_key_exists($room, $zimmerkosten)) {
+                $kostenProNacht = $zimmerkosten[$room];
+                $kosten = $anzahlNaechte * $kostenProNacht;
+            } else {
+                // Fehlerbehandlung für ungültigen Zimmertyp
+                $error_msg = "Ungültiger Zimmertyp ausgewählt!";
+                $isOk = 0;
+            }
+
+            // Zusätzliche Kosten für Frühstück, Haustiere und Parkplatz
+            $zusatzkosten = 0;
+
+            if ($breakfast == 1) {
+                $zusatzkosten += 15;
+            }
+
+            if ($tiere == 1) {
+                $zusatzkosten += 20;
+            }
+
+            if ($park == 1) {
+                $zusatzkosten += 15;
+            }
+
+            // Gesamtkosten einschließlich der Zusatzkosten
+            $gesamtkosten = $kosten + $zusatzkosten;
+
+            $reservation = [
+                'anreise' => $anreise,
+                'abreise' => $abreise,
+                'room' => $room,
+                'breakfast' => $breakfast,
+                'park' => $park,
+                'tiere' => $tiere
+            ];
+
+            $string_data = serialize($reservation);
+            file_put_contents("reservations.txt", $string_data, FILE_APPEND);
+
+            $sql = "INSERT INTO reservierung (anreisedatum, abreisedatum, zimmertyp, fruehstueck, parkplatz, haustiere, kosten) VALUES ('$anreise', '$abreise', '$room', '$breakfast', '$park', '$tiere', $gesamtkosten)";
+
+            if (mysqli_query($conn, $sql)) {
+                $last_id = mysqli_insert_id($conn); // Abrufen der zuletzt eingefügten reservierungs_id
+
+                $username = $_SESSION['user']; // Angenommen, die Session enthält den Benutzernamen
+
+                // Abfrage der E-Mail-Adresse des Benutzers aus der Datenbank
+                $email_query = "SELECT email FROM users WHERE username = '$username'";
+                $email_result = mysqli_query($conn, $email_query);
+
+                if ($email_result && mysqli_num_rows($email_result) > 0) {
+                    $row = mysqli_fetch_assoc($email_result);
+                    $email = $row['email'];
+
+                    // Aktualisierte SQL-Abfrage für das Einfügen in die Tabelle user_reservierung
+                    $update_sql = "INSERT INTO user_reservierungen (reservierungs_id, user_email) VALUES ('$last_id', '$email')";
+                    mysqli_query($conn, $update_sql);
+
+                    $conf_msg = "Reservierung erfolgreich! Sie können Ihre Reservierungen <a href='./meine_reservierungen.php'>hier</a> sehen.";
+                } else {
+                    $error_msg = "Benutzer-E-Mail konnte nicht aus der Datenbank abgerufen werden.";
+                }
+            } else {
+                $error_msg = "Fehler beim Hinzufügen der Reservierung in die Datenbank: " . mysqli_error($conn);
+            }
+        } else {
+            $isOk = 0;
+        }
+    }
 }
 ?>
 

@@ -66,7 +66,7 @@ if (isset($_SESSION["user"])) {
                                     <a href="zimmer.php" class="nav-link">Zimmer buchen</a>
                                 </li>';
                                 echo '<li class="nav-item">
-                                    <a href="made_reservations.php" class="nav-link">Reservierungen</a>
+                                    <a href="meine_reservierungen.php" class="nav-link">Meine Reservierungen</a>
                                 </li>';
                                 echo '<li class="nav-item">
                                     <a href="posted_news.php" class="nav-link">News</a>
@@ -86,7 +86,7 @@ if (isset($_SESSION["user"])) {
                                     <a href="zimmer.php" class="nav-link">Zimmer buchen</a>
                                 </li>';
                                 echo '<li class="nav-item">
-                                    <a href="made_reservations.php" class="nav-link">Reservierungen</a>
+                                    <a href="meine_reservierungen.php" class="nav-link">Meine Reservierungen</a>
                                 </li>';
                                 echo '<li class="nav-item">
                                     <a href="profil.php" class="nav-link">Profil</a>

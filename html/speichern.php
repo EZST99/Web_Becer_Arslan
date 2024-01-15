@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $hashedPassword = password_hash($passwort, PASSWORD_DEFAULT);
 
     // SQL-Query zum Aktualisieren der Daten in der Datenbank
-    $query = "UPDATE users SET vorname = '$vorname', nachname = '$nachname', username = '$username', user_status = '$status', geburtsdatum = '$geburtsdatum', passwort = '$passwort' WHERE email = '$email'";
+    $query = "UPDATE users SET vorname = '$vorname', nachname = '$nachname', username = '$username', user_status = '$status', geburtsdatum = '$geburtsdatum', passwort = '$hashedPassword' WHERE email = '$email'";
 
     if ($conn->query($query) === TRUE) {
         echo "Daten wurden erfolgreich aktualisiert.";

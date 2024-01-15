@@ -80,6 +80,14 @@ include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
                                             <div class="row mt-3">
                                                 <form action="speichernProfil.php" method="post">
                                                     <div class="form-group">
+                                                        <label for="username" class="form-label">Username:</label>
+                                                        <input type="text" class="form-control" id="username" name="username" value="'.$username.'" readonly>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="email" class="form-label">E-Mail-Adresse:</label>
+                                                        <input type="email" class="form-control" id="email" name="email" value="'.$email.'" readonly>
+                                                    </div>
+                                                    <div class="form-group">
                                                         <label for="anrede" class="form-label">Anrede:</label>
                                                         <input type="text" class="form-control" id="anrede" name="anrede" value="'.$anrede.'">
                                                     </div>
@@ -90,14 +98,6 @@ include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
                                                     <div class="form-group">
                                                         <label for="nachname" class="form-label">Nachname:</label>
                                                         <input type="text" class="form-control" id="nachname" name="nachname" value="'.$nachname.'">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="username" class="form-label">Username:</label>
-                                                        <input type="text" class="form-control" id="username" name="username" value="'.$username.'">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="email" class="form-label">E-Mail-Adresse:</label>
-                                                        <input type="email" class="form-control" id="email" name="email" value="'.$email.'">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="geburtstag" class="form-label">Geburtstag:</label>
