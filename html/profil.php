@@ -14,26 +14,27 @@ include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
     <link rel="stylesheet" href="style.css">
     <title>Profilverwaltung</title>
     <style>
-    /* Fügen Sie diesem CSS-Stil die Klasse .footer-container hinzu */
-    .footer-container {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-    }
+        /* Fügen Sie diesem CSS-Stil die Klasse .footer-container hinzu */
+        .footer-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-    /* Fügen Sie diesem CSS-Stil die Klasse .footer hinzu */
-    .footer {
-        margin-top: auto;
-    }
-    .success-message {
-        color: green;
-    }
+        /* Fügen Sie diesem CSS-Stil die Klasse .footer hinzu */
+        .footer {
+            margin-top: auto;
+        }
 
-    /* Stil für Fehlermeldung */
-    .error-message {
-        color: red;
-    }
-</style>
+        .success-message {
+            color: green;
+        }
+
+        /* Stil für Fehlermeldung */
+        .error-message {
+            color: red;
+        }
+    </style>
 </head>
 
 <body>
@@ -67,7 +68,7 @@ include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
                             class="rounded-circle mt-5" width="150px"
                             src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"><span
                             class="font-weight-bold">
-                            ' . $vorname . ' '. $nachname . '
+                            ' . $vorname . ' ' . $nachname . '
                             </span><span class="text-black-50">
                                 ' . $email . '
                             </span><span> </span></div>
@@ -81,27 +82,27 @@ include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
                                                 <form action="speichernProfil.php" method="post">
                                                     <div class="form-group">
                                                         <label for="username" class="form-label">Username:</label>
-                                                        <input type="text" class="form-control" id="username" name="username" value="'.$username.'" readonly>
+                                                        <input type="text" class="form-control" id="username" name="username" value="' . $username . '" readonly>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="email" class="form-label">E-Mail-Adresse:</label>
-                                                        <input type="email" class="form-control" id="email" name="email" value="'.$email.'" readonly>
+                                                        <input type="email" class="form-control" id="email" name="email" value="' . $email . '" readonly>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="anrede" class="form-label">Anrede:</label>
-                                                        <input type="text" class="form-control" id="anrede" name="anrede" value="'.$anrede.'">
+                                                        <input type="text" class="form-control" id="anrede" name="anrede" value="' . $anrede . '">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="vorname" class="form-label">Vorname:</label>
-                                                        <input type="text" class="form-control" id="vorname" name="vorname" value="'.$vorname.'">
+                                                        <input type="text" class="form-control" id="vorname" name="vorname" value="' . $vorname . '">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="nachname" class="form-label">Nachname:</label>
-                                                        <input type="text" class="form-control" id="nachname" name="nachname" value="'.$nachname.'">
+                                                        <input type="text" class="form-control" id="nachname" name="nachname" value="' . $nachname . '">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="geburtstag" class="form-label">Geburtstag:</label>
-                                                        <input type="date" class="form-control" id="geburtstag" name="geburtstag" value="'.$geburtsdatum.'">
+                                                        <input type="date" class="form-control" id="geburtstag" name="geburtstag" value="' . $geburtsdatum . '">
                                                     </div>
                                                     <br>
                                                     <div class="col-12">
@@ -131,18 +132,18 @@ include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
                                                 <button class="btn btn-dark" type="submit" name="register">Passwort ändern</button>
                                             </div>
                                         </form>';
-                                        
-                                        // Meldungen anzeigen, falls vorhanden
-                                        if (isset($_SESSION['password_change_success'])) {
-                                            echo '<p class="success-message">' . $_SESSION['password_change_success'] . '</p>';
-                                            unset($_SESSION['password_change_success']); // Meldung entfernen, damit sie nicht erneut angezeigt wird
-                                        }
-                                        if (isset($_SESSION['password_change_error'])) {
-                                            echo '<p class="error-message">' . $_SESSION['password_change_error'] . '</p>';
-                                            unset($_SESSION['password_change_error']); // Meldung entfernen, damit sie nicht erneut angezeigt wird
-                                        }
-                                        
-                                        echo '</div>
+
+            // Meldungen anzeigen, falls vorhanden
+            if (isset($_SESSION['password_change_success'])) {
+                echo '<p class="success-message">' . $_SESSION['password_change_success'] . '</p>';
+                unset($_SESSION['password_change_success']); // Meldung entfernen, damit sie nicht erneut angezeigt wird
+            }
+            if (isset($_SESSION['password_change_error'])) {
+                echo '<p class="error-message">' . $_SESSION['password_change_error'] . '</p>';
+                unset($_SESSION['password_change_error']); // Meldung entfernen, damit sie nicht erneut angezeigt wird
+            }
+
+            echo '</div>
                                 </div>
                             </div>
                         </div>
@@ -156,12 +157,15 @@ include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
     }
     ?>
 
-<div class="footer"> <!-- Diese Div umschließt den Footer-Inhalt -->
-            <?php
-            include 'footer.php'; // Hier wird der Footer eingefügt
-            ?>
-        </div>
-        </div>
+    <div class="footer"> <!-- Diese Div umschließt den Footer-Inhalt -->
+        <?php
+        include 'footer.php'; // Hier wird der Footer eingefügt
+        ?>
+    </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>

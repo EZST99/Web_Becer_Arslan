@@ -126,11 +126,11 @@ include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
                                             <td>' . $haustiere . '</td>
                                             <td>' . $kosten . '</td>
                                         <div class="mb-3">
-                                        <input type="hidden" class="form-control" id="reservierungs_id" name="reservierungs_id" value="'.$reservierungs_id.'">
+                                        <input type="hidden" class="form-control" id="reservierungs_id" name="reservierungs_id" value="' . $reservierungs_id . '">
                                         </div> </td>
                                         </div>
                                             <td> <div class="mb-3">
-                                        <input type="text" class="form-control" id="res_status" name="res_status" value="'.$res_status.'">
+                                        <input type="text" class="form-control" id="res_status" name="res_status" value="' . $res_status . '">
 
                                         <td> <button type="submit" class="btn btn-primary">Speichern</button>
 
@@ -151,6 +151,9 @@ include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
     <?php
     include 'footer.php';
     ?>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>

@@ -67,8 +67,10 @@ session_start();
                                 bequemes Einzelbett, umgeben von lebhaften, kunstvollen Textilien und Pflanzen. Ein
                                 idealer Rückzugsort für Alleinreisende, mit handgefertigten Möbeln und einer
                                 entspannenden Atmosphäre.</p>
-                                <button class="btn1" <?php if (!isset($_SESSION["user"])) { ?> onclick="location.href='./login.php'" <?php } else { ?> onclick="location.href='./reservierung_neu.php'" <?php } ?>>
-    Jetzt Buchen
+                                <button class="btn1" <?php if (!isset($_SESSION["user"])) { ?> 
+                                    onclick="location.href='./login.php'" <?php } else { ?> 
+                                        onclick="location.href='./reservierung_neu.php?room=Single'" <?php } ?>>
+                                Jetzt Buchen
 </button>
                         </div>
                     </div>
@@ -89,7 +91,7 @@ session_start();
                                 Garten.</p>
                             <button class="btn1" <?php if (!isset($_SESSION["user"])) { ?>
                                     onclick="location.href='./login.php'" <?php } else { ?>
-                                    onclick="location.href='./reservierung_neu.php'" <?php } ?>>
+                                    onclick="location.href='./reservierung_neu.php?room=Double'" <?php } ?>>
                                 Jetzt Buchen
                             </button>
                         </div>
@@ -110,7 +112,7 @@ session_start();
                                 einem Spielbereich für Kinder und einem entspannenden Wohnbereich für Erwachsene.</p>
                             <button class="btn1" <?php if (!isset($_SESSION["user"])) { ?>
                                     onclick="location.href='./login.php'" <?php } else { ?>
-                                    onclick="location.href='./reservierung_neu.php'" <?php } ?>>
+                                    onclick="location.href='./reservierung_neu.php?room=Familiensuite'" <?php } ?>>
                                 Jetzt Buchen
                             </button>
                         </div>
@@ -132,7 +134,7 @@ session_start();
                                 Vermählte.</p>
                             <button class="btn1" <?php if (!isset($_SESSION["user"])) { ?>
                                     onclick="location.href='./login.php'" <?php } else { ?>
-                                    onclick="location.href='./reservierung_neu.php'" <?php } ?>>
+                                    onclick="location.href='./reservierung_neu.php?room=Honeymoonsuite'" <?php } ?>>
                                 Jetzt Buchen
                             </button>
                         </div>

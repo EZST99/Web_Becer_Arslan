@@ -10,6 +10,7 @@
     <title>Index</title>
 
     <style>
+        
         .welcome-message {
             margin-top: 50px;
             margin-left: 110px;
@@ -91,14 +92,16 @@
     </div>
 
     <div class="content">
-        <h2>About Us</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam at justo in elit laoreet ultrices.</p>
+    <div class="col-lg-6">
+        <h2>Über Uns</h2>
+        <p>Willkommen im Boho-Hotel, Ihrem Zufluchtsort für unkonventionelle Eleganz und entspannten Luxus. Unsere Leidenschaft für die Schönheit des Bohemian-Stils spiegelt sich in jedem Detail unseres Hotels wider.</p>
 
-        <h2>Our Rooms</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam at justo in elit laoreet ultrices.</p>
+        <h2>Unsere Zimmer</h2>
+        <p>Willkommen in unserem Boho-Hotel, wo jede Zimmerkategorie eine einzigartige Erfahrung bietet.</p>
 
-        <h2>Contact</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam at justo in elit laoreet ultrices.</p>
+        <h2>Kontakt</h2>
+        <p><a href="mailto:kontakt@helios.com">kontakt@helios.com</a> <br> Tel.: +43 1 000 00 01</p>
+    </div>
     </div>
 
 

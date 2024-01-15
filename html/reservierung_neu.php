@@ -3,8 +3,8 @@ include 'dbaccess.php';
 session_start();
 
 if (!isset($_SESSION['user'])) {
-    header('Location: login_page.php');
-    exit(); // Fügen Sie exit() hinzu, um sicherzustellen, dass das Skript nach der Weiterleitung beendet wird
+  header('Location: login_page.php');
+  exit(); // Fügen Sie exit() hinzu, um sicherzustellen, dass das Skript nach der Weiterleitung beendet wird
 }
 
 $conf_msg = $anreise = $abreise = $room = $breakfast = $park = $tiere = "";
@@ -13,109 +13,109 @@ $isOk = 1;
 
 // Zimmerkosten Mapping (pro Nacht)
 $zimmerkosten = [
-    'Single' => 100,
-    'Double' => 120,
-    'Familiensuite' => 160,
-    'Honeymoonsuite' => 180
+  'Single' => 100,
+  'Double' => 120,
+  'Familiensuite' => 160,
+  'Honeymoonsuite' => 180
 ];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST["anreise"])) {
-        $anreise = $_POST['anreise'];
-    }
-    if (isset($_POST['abreise'])) {
-        $abreise = $_POST['abreise'];
-    }
-    if (isset($_POST['room'])) {
-        $room = $_POST['room'];
-    }
-    if (isset($_POST['breakfast'])) {
-        $breakfast = $_POST['breakfast'];
-    }
-    if (isset($_POST['park'])) {
-        $park = $_POST['park'];
-    }
-    if (isset($_POST['tiere'])) {
-        $tiere = $_POST['tiere'];
-    }
+  if (isset($_POST["anreise"])) {
+    $anreise = $_POST['anreise'];
+  }
+  if (isset($_POST['abreise'])) {
+    $abreise = $_POST['abreise'];
+  }
+  if (isset($_POST['room'])) {
+    $room = $_POST['room'];
+  }
+  if (isset($_POST['breakfast'])) {
+    $breakfast = $_POST['breakfast'];
+  }
+  if (isset($_POST['park'])) {
+    $park = $_POST['park'];
+  }
+  if (isset($_POST['tiere'])) {
+    $tiere = $_POST['tiere'];
+  }
 
-    if (!empty($anreise) && !empty($abreise)) {
-        if ($anreise <= $abreise) {
-            // Berechnen Sie die Anzahl der Nächte
-            $anreiseDatum = new DateTime($anreise);
-            $abreiseDatum = new DateTime($abreise);
-            $anzahlNaechte = $abreiseDatum->diff($anreiseDatum)->days;
+  if (!empty($anreise) && !empty($abreise)) {
+    if ($anreise <= $abreise) {
+      // Berechnen Sie die Anzahl der Nächte
+      $anreiseDatum = new DateTime($anreise);
+      $abreiseDatum = new DateTime($abreise);
+      $anzahlNaechte = $abreiseDatum->diff($anreiseDatum)->days;
 
-            // Berechnen Sie die Kosten basierend auf dem ausgewählten Zimmertyp und Anzahl der Nächte
-            if (array_key_exists($room, $zimmerkosten)) {
-                $kostenProNacht = $zimmerkosten[$room];
-                $kosten = $anzahlNaechte * $kostenProNacht;
-            } else {
-                // Fehlerbehandlung für ungültigen Zimmertyp
-                $error_msg = "Ungültiger Zimmertyp ausgewählt!";
-                $isOk = 0;
-            }
+      // Berechnen Sie die Kosten basierend auf dem ausgewählten Zimmertyp und Anzahl der Nächte
+      if (array_key_exists($room, $zimmerkosten)) {
+        $kostenProNacht = $zimmerkosten[$room];
+        $kosten = $anzahlNaechte * $kostenProNacht;
+      } else {
+        // Fehlerbehandlung für ungültigen Zimmertyp
+        $error_msg = "Ungültiger Zimmertyp ausgewählt!";
+        $isOk = 0;
+      }
 
-            // Zusätzliche Kosten für Frühstück, Haustiere und Parkplatz
-            $zusatzkosten = 0;
+      // Zusätzliche Kosten für Frühstück, Haustiere und Parkplatz
+      $zusatzkosten = 0;
 
-            if ($breakfast == 1) {
-                $zusatzkosten += 15;
-            }
+      if ($breakfast == 1) {
+        $zusatzkosten += 15;
+      }
 
-            if ($tiere == 1) {
-                $zusatzkosten += 20;
-            }
+      if ($tiere == 1) {
+        $zusatzkosten += 20;
+      }
 
-            if ($park == 1) {
-                $zusatzkosten += 15;
-            }
+      if ($park == 1) {
+        $zusatzkosten += 15;
+      }
 
-            // Gesamtkosten einschließlich der Zusatzkosten
-            $gesamtkosten = $kosten + $zusatzkosten;
+      // Gesamtkosten einschließlich der Zusatzkosten
+      $gesamtkosten = $kosten + $zusatzkosten;
 
-            $reservation = [
-                'anreise' => $anreise,
-                'abreise' => $abreise,
-                'room' => $room,
-                'breakfast' => $breakfast,
-                'park' => $park,
-                'tiere' => $tiere
-            ];
+      $reservation = [
+        'anreise' => $anreise,
+        'abreise' => $abreise,
+        'room' => $room,
+        'breakfast' => $breakfast,
+        'park' => $park,
+        'tiere' => $tiere
+      ];
 
-            $string_data = serialize($reservation);
-            file_put_contents("reservations.txt", $string_data, FILE_APPEND);
+      $string_data = serialize($reservation);
+      file_put_contents("reservations.txt", $string_data, FILE_APPEND);
 
-            $sql = "INSERT INTO reservierung (anreisedatum, abreisedatum, zimmertyp, fruehstueck, parkplatz, haustiere, kosten) VALUES ('$anreise', '$abreise', '$room', '$breakfast', '$park', '$tiere', $gesamtkosten)";
+      $sql = "INSERT INTO reservierung (anreisedatum, abreisedatum, zimmertyp, fruehstueck, parkplatz, haustiere, kosten) VALUES ('$anreise', '$abreise', '$room', '$breakfast', '$park', '$tiere', $gesamtkosten)";
 
-            if (mysqli_query($conn, $sql)) {
-                $last_id = mysqli_insert_id($conn); // Abrufen der zuletzt eingefügten reservierungs_id
+      if (mysqli_query($conn, $sql)) {
+        $last_id = mysqli_insert_id($conn); // Abrufen der zuletzt eingefügten reservierungs_id
 
-                $username = $_SESSION['user']; // Angenommen, die Session enthält den Benutzernamen
+        $username = $_SESSION['user']; // Angenommen, die Session enthält den Benutzernamen
 
-                // Abfrage der E-Mail-Adresse des Benutzers aus der Datenbank
-                $email_query = "SELECT email FROM users WHERE username = '$username'";
-                $email_result = mysqli_query($conn, $email_query);
+        // Abfrage der E-Mail-Adresse des Benutzers aus der Datenbank
+        $email_query = "SELECT email FROM users WHERE username = '$username'";
+        $email_result = mysqli_query($conn, $email_query);
 
-                if ($email_result && mysqli_num_rows($email_result) > 0) {
-                    $row = mysqli_fetch_assoc($email_result);
-                    $email = $row['email'];
+        if ($email_result && mysqli_num_rows($email_result) > 0) {
+          $row = mysqli_fetch_assoc($email_result);
+          $email = $row['email'];
 
-                    // Aktualisierte SQL-Abfrage für das Einfügen in die Tabelle user_reservierung
-                    $update_sql = "INSERT INTO user_reservierungen (reservierungs_id, user_email) VALUES ('$last_id', '$email')";
-                    mysqli_query($conn, $update_sql);
+          // Aktualisierte SQL-Abfrage für das Einfügen in die Tabelle user_reservierung
+          $update_sql = "INSERT INTO user_reservierungen (reservierungs_id, user_email) VALUES ('$last_id', '$email')";
+          mysqli_query($conn, $update_sql);
 
-                    $conf_msg = "Reservierung erfolgreich! Sie können Ihre Reservierungen <a href='./meine_reservierungen.php'>hier</a> sehen.";
-                } else {
-                    $error_msg = "Benutzer-E-Mail konnte nicht aus der Datenbank abgerufen werden.";
-                }
-            } else {
-                $error_msg = "Fehler beim Hinzufügen der Reservierung in die Datenbank: " . mysqli_error($conn);
-            }
+          $conf_msg = "Reservierung erfolgreich! Sie können Ihre Reservierungen <a href='./meine_reservierungen.php'>hier</a> sehen.";
         } else {
-            $isOk = 0;
+          $error_msg = "Benutzer-E-Mail konnte nicht aus der Datenbank abgerufen werden.";
         }
+      } else {
+        $error_msg = "Fehler beim Hinzufügen der Reservierung in die Datenbank: " . mysqli_error($conn);
+      }
+    } else {
+      $isOk = 0;
     }
+  }
 }
 ?>
 
@@ -339,16 +339,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <!-- Slideshow -->
   <div class="slideshow">
     <div class="slide active">
-      <img src="https://images.unsplash.com/photo-1683914791874-2dcb78e58e09?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Slide 1">
+      <img
+        src="https://images.unsplash.com/photo-1683914791874-2dcb78e58e09?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        alt="Slide 1">
     </div>
     <div class="slide">
-      <img src="https://images.unsplash.com/photo-1683914791867-20c3fa8734fe?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Slide 2">
+      <img
+        src="https://images.unsplash.com/photo-1683914791867-20c3fa8734fe?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        alt="Slide 2">
     </div>
     <div class="slide">
-      <img src="https://images.unsplash.com/photo-1445019980597-93fa8acb246c?q=80&w=2074&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Slide 3">
+      <img
+        src="https://images.unsplash.com/photo-1445019980597-93fa8acb246c?q=80&w=2074&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        alt="Slide 3">
     </div>
     <div class="slide">
-      <img src="https://images.unsplash.com/photo-1600210491305-7396500b5b31?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Slide 4">
+      <img
+        src="https://images.unsplash.com/photo-1600210491305-7396500b5b31?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        alt="Slide 4">
     </div>
 
     <!-- Navigation Pfeile -->
@@ -418,22 +426,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         min="<?php echo date('Y-m-d'); ?>" inline="true" placeholder="Abreisedatum">
                     </div>
 
+                    <?php
+                    // Überprüfen, ob der Zimmertyp als URL-Parameter übergeben wurde
+                    if (isset($_GET["room"])) {
+                      $selectedRoom = $_GET["room"];
+                    } else {
+                      // Fallback, falls kein Zimmertyp übergeben wurde
+                      $selectedRoom = ""; // Hier den Standard-Zimmertyp festlegen
+                    }
+                    ?>
+
                     <div class="form-group mt-4">
                       <label for="zimmertyp">Zimmertyp</label>
                       <select class="form-select" aria-label="room" name="room">
-                        <option selected disabled value="">Bitte wählen Sie den Zimmertyp...</option>
-                        <option value="Single">Single Zimmer</option>
-                        <option value="Double">Double Zimmer</option>
-                        <option value="Familiensuite">Familien Suite</option>
-                        <option value="Honeymoonsuite">Honeymoon Suite</option>
+                        <option <?php if ($selectedRoom === "")
+                          echo "selected"; ?> disabled value="">Bitte wählen Sie den
+                          Zimmertyp...</option>
+                        <option <?php if ($selectedRoom === "Single")
+                          echo "selected"; ?> value="Single">Single Zimmer (100€ pro Nacht)
+                        </option>
+                        <option <?php if ($selectedRoom === "Double")
+                          echo "selected"; ?> value="Double">Double Zimmer (120€ pro Nacht)
+                        </option>
+                        <option <?php if ($selectedRoom === "Familiensuite")
+                          echo "selected"; ?> value="Familiensuite">
+                          Familien Suite (160€ pro Nacht) </option>
+                        <option <?php if ($selectedRoom === "Honeymoonsuite")
+                          echo "selected"; ?> value="Honeymoonsuite">
+                          Honeymoon Suite (180€ pro Nacht)</option>
                       </select>
                     </div>
+
 
                     <div class="form-group mt-4">
                       <label for="breakfast">Frühstück</label>
                       <select class="form-select" aria-label="breakfast" name="breakfast">
-                        <option selected disabled value="">Möchten Sie Frühstück? (+15€ pro Tag)</option>
-                        <option value="1">Ja</option>
+                        <option selected disabled value="">Möchten Sie Frühstück? (+15€)</option>
+                        <option value="1">Ja (+15€)</option>
                         <option value="0">Nein</option>
                       </select>
                     </div>
@@ -441,8 +470,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="form-group mt-4">
                       <label for="park">Parkplatz</label>
                       <select class="form-select" aria-label="park" name="park">
-                        <option selected disabled value="">Möchten Sie einen Parkplatz reservieren? (+15€ pro Tag)</option>
-                        <option value="1">Ja</option>
+                        <option selected disabled value="">Möchten Sie einen Parkplatz reservieren? (+15€)
+                        </option>
+                        <option value="1">Ja (+15€)</option>
                         <option value="0">Nein</option>
                       </select>
                     </div>
@@ -450,8 +480,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="form-group mt-4">
                       <label for="tiere">Haustiere</label>
                       <select class="form-select" aria-label="tiere" name="tiere">
-                        <option selected disabled value="">Bringen Sie Ihre Haustiere mit? (+20€ pro Tag)</option>
-                        <option value="1">Ja</option>
+                        <option selected disabled value="">Bringen Sie Ihre Haustiere mit? (+20€)</option>
+                        <option value="1">Ja (+20€)</option>
                         <option value="0">Nein</option>
                       </select>
                     </div>
@@ -471,8 +501,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
   </div>
   <?php
-    include 'footer.php';
-    ?>
+  include 'footer.php';
+  ?>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>

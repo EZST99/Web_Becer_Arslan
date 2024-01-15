@@ -8,8 +8,9 @@ include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="style.css">
     <title>Registrierung</title>
     <style>
@@ -25,11 +26,11 @@ include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
 
         body {
             background: rgb(214, 198, 180);
-            background-image: url('https://plus.unsplash.com/premium_photo-1669863547155-be11a345d599?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); 
-            background-position:center; 
-            background-size:cover; 
-            background-repeat:no-repeat; 
-            height:100%;
+            background-image: url('https://plus.unsplash.com/premium_photo-1669863547155-be11a345d599?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            height: 100%;
         }
 
         .row {
@@ -73,56 +74,56 @@ include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
 </head>
 
 <body>
-    <?php    
+    <?php
 
     $nachnameErr = $emailErr = $usernameErr = $anredeErr = $vornameErr = $passwordErr = $repasswordErr = $geburtsdatumErr = $regErfolg = "";
     $username = $email = $geburtsdatum = $anrede = $nachname = $vorname = $password = $repassword = "";
 
 
-    if($_SERVER["REQUEST_METHOD"] == "POST") {
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Validierung für Vorname
-        if(empty($_POST["vorname"])) {
+        if (empty($_POST["vorname"])) {
             $vornameErr = "Bitte ausfüllen!";
         } else {
             $vorname = test_input($_POST["vorname"]);
-            if(!preg_match("/^[a-zA-Z ]*$/", $vorname)) {
+            if (!preg_match("/^[a-zA-Z ]*$/", $vorname)) {
                 $vornameErr = "Nur Buchstaben und Leerzeichen erlaubt!";
             }
         }
 
         // Validierung für Nachname
-        if(empty($_POST["nachname"])) {
+        if (empty($_POST["nachname"])) {
             $nachnameErr = "Bitte ausfüllen!";
         } else {
             $nachname = test_input($_POST["nachname"]);
-            if(!preg_match("/^[a-zA-Z ]*$/", $nachname)) {
+            if (!preg_match("/^[a-zA-Z ]*$/", $nachname)) {
                 $nachnameErr = "Nur Buchstaben und Leerzeichen erlaubt!";
             }
         }
 
         // Validierung für Benutzername
-        if(empty($_POST["username"])) {
+        if (empty($_POST["username"])) {
             $usernameErr = "Bitte ausfüllen!";
         } else {
             $username = test_input($_POST["username"]);
         }
 
         // Validierung für Anrede
-        if(empty($_POST["anrede"])) {
+        if (empty($_POST["anrede"])) {
             $anredeErr = "Bitte ausfüllen!";
         } else {
             $anrede = test_input($_POST["anrede"]);
-            if(!preg_match("/^[a-zA-Z ]*$/", $anrede)) {
+            if (!preg_match("/^[a-zA-Z ]*$/", $anrede)) {
                 $anredeErr = "Nur Buchstaben erlaubt!";
             }
         }
 
         // Email-Validierung
-        if(empty($_POST["email"])) {
+        if (empty($_POST["email"])) {
             $emailErr = "Bitte ausfüllen!";
         } else {
             $email = test_input($_POST["email"]);
-            if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $emailErr = "Ungültiges Format!";
             } else {
                 // Überprüfen, ob die E-Mail-Adresse bereits in der Datenbank vorhanden ist
@@ -131,7 +132,7 @@ include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
                 $check_email_query->execute();
                 $result = $check_email_query->get_result();
 
-                if($result->num_rows > 0) {
+                if ($result->num_rows > 0) {
                     $emailErr = "Diese E-Mail-Adresse ist bereits registriert!";
                 }
 
@@ -140,47 +141,48 @@ include 'dbaccess.php'; // Hier die Datenbankverbindung einbinden
         }
 
         // Validierung für Passwort
-        if(empty($_POST["password"])) {
+        if (empty($_POST["password"])) {
             $passwordErr = "Bitte ausfüllen!";
         } else {
             $password = test_input($_POST["password"]);
         }
 
         // Validierung für Passwort wiederholen
-        if(empty($_POST["repassword"])) {
+        if (empty($_POST["repassword"])) {
             $repasswordErr = "Bitte ausfüllen!";
         } else {
             $repassword = test_input($_POST["repassword"]);
-            if($repassword !== $password) {
+            if ($repassword !== $password) {
                 $repasswordErr = "Die Passwörter stimmen nicht überein!";
             }
         }
 
         // Validierung für Geburtsdatum
-        if(empty($_POST["geburtsdatum"])) {
+        if (empty($_POST["geburtsdatum"])) {
             $geburtsdatumErr = "Bitte ausfüllen!";
         } else {
             $geburtsdatum = test_input($_POST["geburtsdatum"]);
         }
 
         // Überprüfen, ob keine Fehler aufgetreten sind
-        if($vornameErr == "" && $nachnameErr == "" && $emailErr == "" && $usernameErr == "" && $geburtsdatumErr == "" && $anredeErr == "" && $passwordErr == "" && $repasswordErr == "") {
+        if ($vornameErr == "" && $nachnameErr == "" && $emailErr == "" && $usernameErr == "" && $geburtsdatumErr == "" && $anredeErr == "" && $passwordErr == "" && $repasswordErr == "") {
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
             $stmt = $conn->prepare("INSERT INTO users (anrede, vorname, nachname, email, geburtsdatum, username, passwort) VALUES (?, ?, ?, ?, ?, ?, ?)");
             $stmt->bind_param("sssssss", $anrede, $vorname, $nachname, $email, $geburtsdatum, $username, $hashedPassword);
 
-            if($stmt->execute()) {
+            if ($stmt->execute()) {
                 $regErfolg = "Sie haben sich erfolgreich registriert!";
                 // Weitere erfolgreiche Registrierungsausgaben...
             } else {
-                echo "Fehler beim Speichern der Daten in die Datenbank: ".$stmt->error;
+                echo "Fehler beim Speichern der Daten in die Datenbank: " . $stmt->error;
             }
             $stmt->close();
             $conn->close();
         }
     }
 
-    function test_input($data) {
+    function test_input($data)
+    {
         $data = trim($data);
         $data = stripslashes($data);
         $data = htmlspecialchars($data);
